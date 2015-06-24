@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="T-Systems_Mobile_Company:war">
-    <output-path>$PROJECT_DIR$/target</output-path>
-    <root id="archive" name="mobile-company.war">
-      <element id="artifact" artifact-name="T-Systems_Mobile_Company:war exploded" />
-    </root>
-  </artifact>
-</component>

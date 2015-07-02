@@ -1,4 +1,4 @@
-package org.tsystems.mobile_company.entity;
+package org.tsystems.mobile_company.entitys;
 
 import javax.persistence.*;
 
@@ -6,8 +6,8 @@ import javax.persistence.*;
  * Created by sergey on 28.06.15.
  */
 @Entity
-@Table(name = "USER_TYPE", catalog = "mobile_company")
-public class UserTypeEntity {
+@Table(name = "LOCK_TYPE", catalog = "mobile_company")
+public class LockTypeEntity {
     private int id;
     private String type;
 
@@ -36,7 +36,7 @@ public class UserTypeEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        UserTypeEntity that = (UserTypeEntity) o;
+        LockTypeEntity that = (LockTypeEntity) o;
 
         if (id != that.id) return false;
         if (type != null ? !type.equals(that.type) : that.type != null) return false;

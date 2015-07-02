@@ -1,4 +1,4 @@
-package org.tsystems.mobile_company.entity;
+package org.tsystems.mobile_company.entitys;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -6,6 +6,10 @@ import java.sql.Date;
 /**
  * Created by sergey on 28.06.15.
  */
+@NamedQueries({
+        @NamedQuery(name="UserEntity.checkLoginAndPassword", query="SELECT name FROM UserEntity u WHERE u.email=:Login AND u.password=:Password")
+})
+
 @Entity
 @Table(name = "USER", catalog = "mobile_company")
 public class UserEntity {

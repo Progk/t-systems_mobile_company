@@ -1,4 +1,4 @@
-package org.tsystems.mobile_company.entity;
+package org.tsystems.mobile_company.entitys;
 
 import javax.persistence.*;
 

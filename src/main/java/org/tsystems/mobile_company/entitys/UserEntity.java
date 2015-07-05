@@ -1,7 +1,11 @@
 package org.tsystems.mobile_company.entitys;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by sergey on 28.06.15.
@@ -12,18 +16,52 @@ import java.sql.Date;
 
 @Entity
 @Table(name = "USER", catalog = "mobile_company")
-public class UserEntity {
-    private int id;
-    private String name;
-    private String surname;
-    private Date dateOfBirth;
-    private int passportData;
-    private String address;
-    private String email;
-    private String password;
+public class UserEntity implements Serializable {
 
     @Id
-    @Column(name = "ID")
+    @GeneratedValue
+    @Column(name = "ID", nullable = false)
+    private int id;
+
+    @Basic
+    @Column(name = "NAME", nullable = false, length = 20)
+    private String name;
+
+    @Basic
+    @Column(name = "SURNAME", nullable = false, length = 30)
+    private String surname;
+
+    @Basic
+    @Column(name = "DATE_OF_BIRTH", nullable = false)
+    private Date dateOfBirth;
+
+    @Basic
+    @Column(name = "PASSPORT_DATA", nullable = false)
+    private int passportData;
+
+    @Basic
+    @Column(name = "ADDRESS", nullable = false, length = 100)
+    private String address;
+
+    @Basic
+    @Column(name = "EMAIL", nullable = false, length = 50)
+    private String email;
+
+    @Basic
+    @Column(name = "PASSWORD", nullable = false, length = 100)
+    private String password;
+
+    /**
+     * contracts which have this user
+     */
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private Set<ContractEntity> contracts;
+
+    @ManyToOne
+    @JoinColumn(name = "USER_TYPE_ID")
+    private UserTypeEntity userType;
+
+
     public int getId() {
         return id;
     }
@@ -32,8 +70,6 @@ public class UserEntity {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "NAME")
     public String getName() {
         return name;
     }
@@ -42,8 +78,6 @@ public class UserEntity {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "SURNAME")
     public String getSurname() {
         return surname;
     }
@@ -52,8 +86,6 @@ public class UserEntity {
         this.surname = surname;
     }
 
-    @Basic
-    @Column(name = "DATE_OF_BIRTH")
     public Date getDateOfBirth() {
         return dateOfBirth;
     }
@@ -62,8 +94,6 @@ public class UserEntity {
         this.dateOfBirth = dateOfBirth;
     }
 
-    @Basic
-    @Column(name = "PASSPORT_DATA")
     public int getPassportData() {
         return passportData;
     }
@@ -72,8 +102,6 @@ public class UserEntity {
         this.passportData = passportData;
     }
 
-    @Basic
-    @Column(name = "ADDRESS")
     public String getAddress() {
         return address;
     }
@@ -82,8 +110,6 @@ public class UserEntity {
         this.address = address;
     }
 
-    @Basic
-    @Column(name = "EMAIL")
     public String getEmail() {
         return email;
     }
@@ -92,14 +118,28 @@ public class UserEntity {
         this.email = email;
     }
 
-    @Basic
-    @Column(name = "PASSWORD")
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Set<ContractEntity> getContracts() {
+        return contracts;
+    }
+
+    public void setContracts(Set<ContractEntity> contracts) {
+        this.contracts = contracts;
+    }
+
+    public UserTypeEntity getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserTypeEntity userType) {
+        this.userType = userType;
     }
 
     @Override
@@ -111,26 +151,25 @@ public class UserEntity {
 
         if (id != that.id) return false;
         if (passportData != that.passportData) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (surname != null ? !surname.equals(that.surname) : that.surname != null) return false;
-        if (dateOfBirth != null ? !dateOfBirth.equals(that.dateOfBirth) : that.dateOfBirth != null) return false;
-        if (address != null ? !address.equals(that.address) : that.address != null) return false;
-        if (email != null ? !email.equals(that.email) : that.email != null) return false;
-        if (password != null ? !password.equals(that.password) : that.password != null) return false;
+        if (!name.equals(that.name)) return false;
+        if (!surname.equals(that.surname)) return false;
+        if (!dateOfBirth.equals(that.dateOfBirth)) return false;
+        if (!address.equals(that.address)) return false;
+        if (!email.equals(that.email)) return false;
+        return password.equals(that.password);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (surname != null ? surname.hashCode() : 0);
-        result = 31 * result + (dateOfBirth != null ? dateOfBirth.hashCode() : 0);
+        result = 31 * result + name.hashCode();
+        result = 31 * result + surname.hashCode();
+        result = 31 * result + dateOfBirth.hashCode();
         result = 31 * result + passportData;
-        result = 31 * result + (address != null ? address.hashCode() : 0);
-        result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + address.hashCode();
+        result = 31 * result + email.hashCode();
+        result = 31 * result + password.hashCode();
         return result;
     }
 }

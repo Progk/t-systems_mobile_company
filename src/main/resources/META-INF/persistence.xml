@@ -6,12 +6,11 @@
         <class>org.tsystems.mobile_company.entitys.ContractEntity</class>
         <class>org.tsystems.mobile_company.entitys.LockTypeEntity</class>
         <class>org.tsystems.mobile_company.entitys.OptionEntity</class>
-        <class>org.tsystems.mobile_company.entitys.OptionsConstraintEntity</class>
         <class>org.tsystems.mobile_company.entitys.PlanEntity</class>
-        <class>org.tsystems.mobile_company.entitys.PlanOptionsEntity</class>
         <class>org.tsystems.mobile_company.entitys.SelectedOptionsEntity</class>
         <class>org.tsystems.mobile_company.entitys.UserEntity</class>
         <class>org.tsystems.mobile_company.entitys.UserTypeEntity</class>
+        <class>org.tsystems.mobile_company.entitys.UserContractsEntity</class>
         <properties>
             <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/mobile_company"/>
             <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>

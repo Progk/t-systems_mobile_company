@@ -35,8 +35,8 @@ public class FilterLoginValidation implements Filter {
         if (!validationErrors.isEmpty()) { //if input data is not valid
             req.getRequestDispatcher("/error.jsp").forward(req, resp);
         }
-
         EntityManager entityManager = EntityManagerFactoryInstance.getEntityManager();
+        try {
         entityManager.getTransaction().begin();
         TypedQuery<String> typedQuery = entityManager.createNamedQuery("UserEntity.checkLoginAndPassword", String.class);
         typedQuery.setParameter("Login", userMail);
@@ -44,6 +44,12 @@ public class FilterLoginValidation implements Filter {
         if (typedQuery.getResultList().isEmpty()) { //if we have not user in db with this input data
             req.getRequestDispatcher("/error.jsp").forward(req, resp);
         }
+        } catch (Exception e) {
+
+        } finally {
+            entityManager.getTransaction().commit();
+        }
+
         chain.doFilter(req, resp);
     }
 

@@ -1,4 +1,4 @@
-package org.tsystems.mobile_company.entitys;
+package org.tsystems.mobile_company.entities;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -7,10 +7,8 @@ import java.util.Set;
  * Created by sergey on 28.06.15.
  */
 @Entity
-@Table(name = "USER_TYPE", catalog = "mobile_company")
-public class UserTypeEntity {
-    public static final String ADMIN_TYPE = "ADMIN";
-    public static final String USER_TYPE = "USER";
+@Table(name = "LOCK_TYPE", catalog = "mobile_company")
+public class LockType {
 
     @Id
     @GeneratedValue
@@ -22,10 +20,11 @@ public class UserTypeEntity {
     private String type;
 
     /**
-     * users which have this lock type
+     * contracts which have this lock type
      */
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userType")
-    private Set<UserEntity> users;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "lockType")
+    private Set<Contract> contracts;
+
 
     public int getId() {
         return id;
@@ -43,20 +42,12 @@ public class UserTypeEntity {
         this.type = type;
     }
 
-    public Set<UserEntity> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<UserEntity> users) {
-        this.users = users;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        UserTypeEntity that = (UserTypeEntity) o;
+        LockType that = (LockType) o;
 
         if (id != that.id) return false;
         return type.equals(that.type);

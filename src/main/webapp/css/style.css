@@ -1,0 +1,9 @@
+.centered-box {
+    position: fixed; /* or absolute if you want it to scroll with the page */
+    top: 50%;
+    left: 50%;
+    width: 1000px;
+    height: 300px;
+    margin-top: -150px;
+    margin-left: -300px;
+}

@@ -1,15 +1,19 @@
-package org.tsystems.mobile_company.entitys;
+package org.tsystems.mobile_company.entities;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Created by sergey on 28.06.15.
  */
+@NamedQueries({
+        @NamedQuery(name="Plan.getAllPlans", query = "FROM Plan")
+})
+
+
 @Entity
 @Table(name = "PLAN", catalog = "mobile_company")
-public class PlanEntity {
+public class Plan {
 
     @Id
     @GeneratedValue
@@ -31,8 +35,15 @@ public class PlanEntity {
     @JoinTable(name="PLAN_OPTIONS",
             joinColumns={@JoinColumn(name="PLAN_ID")},
             inverseJoinColumns={@JoinColumn(name="OPTION_ID")})
-    private Set<OptionEntity> options;
+    private Set<Option> options;
 
+    public Plan(String name, int price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    public Plan() {
+    }
 
     public int getId() {
         return id;
@@ -58,11 +69,11 @@ public class PlanEntity {
         this.price = price;
     }
 
-    public Set<OptionEntity> getOptions() {
+    public Set<Option> getOptions() {
         return options;
     }
 
-    public void setOptions(Set<OptionEntity> options) {
+    public void setOptions(Set<Option> options) {
         this.options = options;
     }
 
@@ -71,7 +82,7 @@ public class PlanEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        PlanEntity that = (PlanEntity) o;
+        Plan that = (Plan) o;
 
         if (id != that.id) return false;
         if (price != that.price) return false;

@@ -1,11 +1,17 @@
 package org.tsystems.mobile_company;
 
-import org.tsystems.mobile_company.entitys.*;
+import org.tsystems.mobile_company.dao.ContractDAO;
+import org.tsystems.mobile_company.dao.OptionDAO;
+import org.tsystems.mobile_company.dao.UserDAO;
+import org.tsystems.mobile_company.entities.*;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
+import java.sql.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by sergey on 04.07.15.
@@ -14,23 +20,10 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         EntityManager em = EntityManagerFactoryInstance.getEntityManager();
-        em.getTransaction().begin();
-        List<UserEntity> userEntities = em.createQuery("from UserEntity ").getResultList();
-        List<ContractEntity> contactEntities = em.createQuery("from ContractEntity ").getResultList();
-        List<UserTypeEntity> userTypeEntities = em.createQuery("from UserTypeEntity ").getResultList();
-        List<LockTypeEntity> lockTypeEntities = em.createQuery("from LockTypeEntity ").getResultList();
-        List<OptionEntity> planEntities = em.createQuery("from OptionEntity ").getResultList();
-        em.getTransaction().commit();
-        em = EntityManagerFactoryInstance.getEntityManager();
-        TypedQuery<UserEntity> typedQuery = em.createNamedQuery("UserEntity.checkLoginAndPassword",
-                UserEntity.class);
-        typedQuery.setParameter("Login", "ivan@gmail.com");
-        typedQuery.setParameter("Password", "iamivan");
-        UserEntity u = typedQuery.getResultList().get(0);
-        em.getTransaction().begin();
-        UserEntity uu = em.merge(u);
-        uu.setName("Ivan");
-        em.getTransaction().commit();
-        em.close();
+        EntityTransaction et = em.getTransaction();
+        et.begin();
+        Contract c = new Contract("123", 2, 3, 2);
+        ContractDAO.getInstance().addOrUpdate(c);
+        et.commit();
     }
 }

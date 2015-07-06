@@ -1,12 +1,10 @@
 package org.tsystems.mobile_company.services;
 
-import org.hibernate.Transaction;
 import org.tsystems.mobile_company.EntityManagerFactoryInstance;
-import org.tsystems.mobile_company.entitys.UserEntity;
-import org.tsystems.mobile_company.entitys.UserTypeEntity;
+import org.tsystems.mobile_company.entities.User;
+import org.tsystems.mobile_company.entities.UserType;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
@@ -31,12 +29,12 @@ public class UserValidation {
         EntityManager entityManager = EntityManagerFactoryInstance.getEntityManager();
         boolean returnState = false;
         try {
-            TypedQuery<UserEntity> typedQuery = entityManager.createNamedQuery("UserEntity.checkLoginAndPassword",
-                    UserEntity.class);
+            TypedQuery<User> typedQuery = entityManager.createNamedQuery("UserEntity.checkLoginAndPassword",
+                    User.class);
             typedQuery.setParameter("Login", name);
             typedQuery.setParameter("Password", password);
             if (!typedQuery.getResultList().isEmpty() && typedQuery.getResultList().size() == 1) {
-                if (typedQuery.getResultList().get(0).getUserType().getType().equals(UserTypeEntity.ADMIN_TYPE))
+                if (typedQuery.getResultList().get(0).getUserType().getType().equals(UserType.ADMIN_TYPE))
                     isAdmin = true;
                 returnState = true;
             }

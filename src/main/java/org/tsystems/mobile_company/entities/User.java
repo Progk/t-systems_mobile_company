@@ -1,22 +1,21 @@
-package org.tsystems.mobile_company.entitys;
+package org.tsystems.mobile_company.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
  * Created by sergey on 28.06.15.
  */
 @NamedQueries({
-        @NamedQuery(name="UserEntity.checkLoginAndPassword", query="FROM UserEntity u WHERE u.email=:Login AND u.password=:Password")
+        @NamedQuery(name="User.findUserByLoginAndPassword", query="FROM User u WHERE u.email=:Login AND u.password=:Password"),
+        @NamedQuery(name="User.getAllUsers", query = "FROM User")
 })
 
 @Entity
 @Table(name = "USER", catalog = "mobile_company")
-public class UserEntity implements Serializable {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue
@@ -51,16 +50,33 @@ public class UserEntity implements Serializable {
     @Column(name = "PASSWORD", nullable = false, length = 100)
     private String password;
 
+    @Basic
+    @Column(name = "USER_TYPE_ID", nullable = false)
+    private int userTypeId;
+
     /**
-     * contracts which have this user
+     * Contracts which have this user
      */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private Set<ContractEntity> contracts;
+    private Set<Contract> contracts;
 
     @ManyToOne
-    @JoinColumn(name = "USER_TYPE_ID")
-    private UserTypeEntity userType;
+    @JoinColumn(name = "USER_TYPE_ID", insertable = false, updatable = false)
+    private UserType userType;
 
+    public User(String name, String surname, Date dateOfBirth, int passportData, String address, String email, String password, int userTypeId) {
+        this.name = name;
+        this.surname = surname;
+        this.dateOfBirth = dateOfBirth;
+        this.passportData = passportData;
+        this.address = address;
+        this.email = email;
+        this.password = password;
+        this.userTypeId = userTypeId;
+    }
+
+    public User() {
+    }
 
     public int getId() {
         return id;
@@ -126,19 +142,19 @@ public class UserEntity implements Serializable {
         this.password = password;
     }
 
-    public Set<ContractEntity> getContracts() {
+    public Set<Contract> getContracts() {
         return contracts;
     }
 
-    public void setContracts(Set<ContractEntity> contracts) {
+    public void setContracts(Set<Contract> contracts) {
         this.contracts = contracts;
     }
 
-    public UserTypeEntity getUserType() {
+    public UserType getUserType() {
         return userType;
     }
 
-    public void setUserType(UserTypeEntity userType) {
+    public void setUserType(UserType userType) {
         this.userType = userType;
     }
 
@@ -147,7 +163,7 @@ public class UserEntity implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        UserEntity that = (UserEntity) o;
+        User that = (User) o;
 
         if (id != that.id) return false;
         if (passportData != that.passportData) return false;

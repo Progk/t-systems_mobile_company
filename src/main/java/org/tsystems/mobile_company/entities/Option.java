@@ -1,4 +1,4 @@
-package org.tsystems.mobile_company.entitys;
+package org.tsystems.mobile_company.entities;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -7,9 +7,14 @@ import java.util.Set;
 /**
  * Created by sergey on 28.06.15.
  */
+
+@NamedQueries({
+        @NamedQuery(name="Option.getAllOptions", query = "FROM Option")
+})
+
 @Entity
 @Table(name = "OPTION", catalog = "mobile_company")
-public class OptionEntity {
+public class Option {
 
     @Id
     @GeneratedValue
@@ -32,13 +37,13 @@ public class OptionEntity {
      * plans which include this option
      */
     @ManyToMany(mappedBy="options")
-    private Set<PlanEntity> plans = new HashSet<PlanEntity>();
+    private Set<Plan> plans = new HashSet<Plan>();
 
     /**
      * contracts which include this option
      */
     @ManyToMany(mappedBy="selectedOptions")
-    private Set<ContractEntity> contracts = new HashSet<ContractEntity>();
+    private Set<Contract> contracts = new HashSet<Contract>();
 
     /**
      * locked options for this option
@@ -47,13 +52,23 @@ public class OptionEntity {
     @JoinTable(name="OPTIONS_CONSTRAINT",
             joinColumns={@JoinColumn(name="OPTION_ID")},
             inverseJoinColumns={@JoinColumn(name="OPTION_LOCKED_ID")})
-    private Set<OptionEntity> locked = new HashSet<OptionEntity>();
+    private Set<Option> locked = new HashSet<Option>();
 
     /**
      * options for locked option
      */
     @ManyToMany(mappedBy="locked")
-    private Set<OptionEntity> options;
+    private Set<Option> options;
+
+
+    public Option(String name, int price, int costConnect) {
+        this.name = name;
+        this.price = price;
+        this.costConnect = costConnect;
+    }
+
+    public Option() {
+    }
 
     public int getId() {
         return id;
@@ -87,35 +102,35 @@ public class OptionEntity {
         this.costConnect = costConnect;
     }
 
-    public Set<PlanEntity> getPlans() {
+    public Set<Plan> getPlans() {
         return plans;
     }
 
-    public void setPlans(Set<PlanEntity> plans) {
+    public void setPlans(Set<Plan> plans) {
         this.plans = plans;
     }
 
-    public Set<OptionEntity> getLocked() {
+    public Set<Option> getLocked() {
         return locked;
     }
 
-    public void setLocked(Set<OptionEntity> locked) {
+    public void setLocked(Set<Option> locked) {
         this.locked = locked;
     }
 
-    public Set<OptionEntity> getOptions() {
+    public Set<Option> getOptions() {
         return options;
     }
 
-    public void setOptions(Set<OptionEntity> options) {
+    public void setOptions(Set<Option> options) {
         this.options = options;
     }
 
-    public Set<ContractEntity> getContracts() {
+    public Set<Contract> getContracts() {
         return contracts;
     }
 
-    public void setContracts(Set<ContractEntity> contracts) {
+    public void setContracts(Set<Contract> contracts) {
         this.contracts = contracts;
     }
 
@@ -124,7 +139,7 @@ public class OptionEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        OptionEntity that = (OptionEntity) o;
+        Option that = (Option) o;
 
         if (id != that.id) return false;
         if (price != that.price) return false;

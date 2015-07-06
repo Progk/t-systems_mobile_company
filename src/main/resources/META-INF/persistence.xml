@@ -3,14 +3,14 @@
 
     <persistence-unit name="mobile_company" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>org.tsystems.mobile_company.entitys.ContractEntity</class>
-        <class>org.tsystems.mobile_company.entitys.LockTypeEntity</class>
-        <class>org.tsystems.mobile_company.entitys.OptionEntity</class>
-        <class>org.tsystems.mobile_company.entitys.PlanEntity</class>
-        <class>org.tsystems.mobile_company.entitys.SelectedOptionsEntity</class>
-        <class>org.tsystems.mobile_company.entitys.UserEntity</class>
-        <class>org.tsystems.mobile_company.entitys.UserTypeEntity</class>
-        <class>org.tsystems.mobile_company.entitys.UserContractsEntity</class>
+        <class>org.tsystems.mobile_company.entities.Contract</class>
+        <class>org.tsystems.mobile_company.entities.LockType</class>
+        <class>org.tsystems.mobile_company.entities.Option</class>
+        <class>org.tsystems.mobile_company.entities.Plan</class>
+        <class>org.tsystems.mobile_company.entities.SelectedOptionsEntity</class>
+        <class>org.tsystems.mobile_company.entities.User</class>
+        <class>org.tsystems.mobile_company.entities.UserType</class>
+        <class>org.tsystems.mobile_company.entities.UserContractsEntity</class>
         <properties>
             <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/mobile_company"/>
             <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>

@@ -103,7 +103,7 @@ public class ContractEntity {
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + number.hashCode();
+        result = 31 * result;
         return result;
     }
 }

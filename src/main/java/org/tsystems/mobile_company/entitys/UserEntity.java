@@ -11,7 +11,7 @@ import java.util.Set;
  * Created by sergey on 28.06.15.
  */
 @NamedQueries({
-        @NamedQuery(name="UserEntity.checkLoginAndPassword", query="SELECT name FROM UserEntity u WHERE u.email=:Login AND u.password=:Password")
+        @NamedQuery(name="UserEntity.checkLoginAndPassword", query="FROM UserEntity u WHERE u.email=:Login AND u.password=:Password")
 })
 
 @Entity

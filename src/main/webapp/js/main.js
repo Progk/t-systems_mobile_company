@@ -1,3 +1,4 @@
+/*
 $(document).ready(function() {
     $("#login_form").on('submit',function(){
         $.ajax({
@@ -15,5 +16,10 @@ $(document).ready(function() {
     });
 
 
+});
+*/
+
+jQuery(document).ready(function ($) {
+    $('#tabs').tab();
 });
 

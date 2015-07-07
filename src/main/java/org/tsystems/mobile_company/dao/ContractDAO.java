@@ -11,17 +11,10 @@ import java.util.List;
  */
 public class ContractDAO implements IEntityDAO<Contract> {
 
-    private static ContractDAO contractDAO;
     private EntityManager entityManager = EntityManagerFactoryInstance.getEntityManager();
 
-    private ContractDAO() {
+    public ContractDAO() {
 
-    }
-
-    public static synchronized ContractDAO getInstance() {
-        if (contractDAO == null)
-            contractDAO = new ContractDAO();
-        return contractDAO;
     }
 
     public Contract addOrUpdate(Contract entity) {

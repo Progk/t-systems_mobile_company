@@ -1,6 +1,8 @@
 package org.tsystems.mobile_company.servlets;
 
-import org.tsystems.mobile_company.services.UserValidation;
+import org.tsystems.mobile_company.entities.User;
+import org.tsystems.mobile_company.entities.UserType;
+import org.tsystems.mobile_company.services.UserServices;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -31,15 +33,13 @@ public class LoginServlet extends HttpServlet {
     private void process (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String userEmail = request.getParameter("email");
         String userPassword = request.getParameter("password");
-        UserValidation validation = new UserValidation(userEmail, userPassword);
-        if (validation.validate()) {
-            ServletContext context = getServletContext();
-            if (validation.isAdmin())
-                response.sendRedirect(context.getContextPath()+"/AdminServlet");
-            else
-                response.sendRedirect(context.getContextPath()+"/UserServlet");
-        } else {
+        User user = UserServices.getInstance().findUserByEmailAndPassword(userEmail, userPassword);
+        ServletContext context = getServletContext();
+        if (user.getUserTypeId() == UserType.ADMIN_TYPE)
+            response.sendRedirect(context.getContextPath()+"/AdminServlet");
+        else if (user.getUserTypeId() == UserType.USER_TYPE)
+            response.sendRedirect(context.getContextPath()+"/UserServlet");
+        else
             request.getRequestDispatcher("/error.jsp").forward(request, response);
-        }
     }
 }

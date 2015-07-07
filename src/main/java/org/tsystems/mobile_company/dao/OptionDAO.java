@@ -11,18 +11,7 @@ import java.util.List;
  */
 public class OptionDAO implements IEntityDAO<Option> {
 
-    private static OptionDAO optionDAO;
     private EntityManager entityManager = EntityManagerFactoryInstance.getEntityManager();
-
-    private OptionDAO() {
-
-    }
-
-    public static synchronized OptionDAO getInstance() {
-        if (optionDAO == null)
-            optionDAO = new OptionDAO();
-        return optionDAO;
-    }
 
     public Option addOrUpdate(Option entity) {
         return entityManager.merge(entity);

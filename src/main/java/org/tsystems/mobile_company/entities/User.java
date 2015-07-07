@@ -9,7 +9,7 @@ import java.util.Set;
  * Created by sergey on 28.06.15.
  */
 @NamedQueries({
-        @NamedQuery(name="User.findUserByLoginAndPassword", query="FROM User u WHERE u.email=:Login AND u.password=:Password"),
+        @NamedQuery(name="User.findUserByLoginAndPassword", query="FROM User u WHERE u.email=:Email AND u.password=:Password"),
         @NamedQuery(name="User.getAllUsers", query = "FROM User")
 })
 
@@ -156,6 +156,14 @@ public class User implements Serializable {
 
     public void setUserType(UserType userType) {
         this.userType = userType;
+    }
+
+    public int getUserTypeId() {
+        return userTypeId;
+    }
+
+    public void setUserTypeId(int userTypeId) {
+        this.userTypeId = userTypeId;
     }
 
     @Override

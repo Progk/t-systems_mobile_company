@@ -9,8 +9,8 @@ import java.util.Set;
 @Entity
 @Table(name = "USER_TYPE", catalog = "mobile_company")
 public class UserType {
-    public static final String ADMIN_TYPE = "ADMIN";
-    public static final String USER_TYPE = "USER";
+    public static final int ADMIN_TYPE = 1;
+    public static final int USER_TYPE =  2;
 
     @Id
     @GeneratedValue

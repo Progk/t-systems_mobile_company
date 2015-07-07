@@ -4,7 +4,8 @@ import org.tsystems.mobile_company.EntityManagerFactoryInstance;
 import org.tsystems.mobile_company.entities.User;
 
 import javax.persistence.EntityManager;
-import java.sql.SQLException;
+import javax.persistence.NamedQuery;
+import javax.persistence.Query;
 import java.util.List;
 
 /**
@@ -12,18 +13,7 @@ import java.util.List;
  */
 public class UserDAO implements IEntityDAO<User> {
 
-    private static UserDAO userDAO;
     private EntityManager entityManager = EntityManagerFactoryInstance.getEntityManager();
-
-    private UserDAO() {
-
-    }
-
-    public static synchronized UserDAO getInstance() {
-        if (userDAO == null)
-            userDAO = new UserDAO();
-        return userDAO;
-    }
 
     public User addOrUpdate(User entity) {
         return entityManager.merge(entity);
@@ -39,5 +29,12 @@ public class UserDAO implements IEntityDAO<User> {
 
     public List<User> getAll() {
         return entityManager.createNamedQuery("User.getAllUsers", User.class).getResultList();
+    }
+
+    public User findByEmailAndPassword(String email, String password) {
+        Query query = entityManager.createNamedQuery("User.findUserByLoginAndPassword", User.class);
+        query.setParameter("Email", email);
+        query.setParameter("Password", password);
+        return (User) query.getSingleResult();
     }
 }

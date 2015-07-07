@@ -10,7 +10,7 @@
 </head>
 
 <body>
-<div class="centered-box">
+<div class="formWrapper">
 <form class="form-horizontal" role="form" action="/LoginServlet" method="post">
 
     <div class="form-group ">

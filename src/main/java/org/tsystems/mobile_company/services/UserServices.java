@@ -4,6 +4,7 @@ import org.tsystems.mobile_company.EntityManagerFactoryInstance;
 import org.tsystems.mobile_company.dao.UserDAO;
 import org.tsystems.mobile_company.entities.User;
 import org.tsystems.mobile_company.entities.UserType;
+import org.tsystems.mobile_company.utils.ECareException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -28,15 +29,18 @@ public class UserServices {
         return userServices;
     }
 
-    public User findUserByEmailAndPassword(String email, String password) {
+    public User findUserByEmailAndPassword(String email, String password) throws ECareException {
         User user = null;
         try {
             EntityManagerFactoryInstance.beginTransaction();
             user = userDAO.findByEmailAndPassword(email, password);
             EntityManagerFactoryInstance.commitTransaction();
         } catch (NoResultException e) {
-            e.printStackTrace(); //need some custom exception here
+            if (EntityManagerFactoryInstance.isActiveTransaction())
+                EntityManagerFactoryInstance.rollbackTransaction();
+            throw new ECareException("No user with this Email and Password");
         }
         return user;
     }
+
 }

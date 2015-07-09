@@ -4,6 +4,7 @@ import org.tsystems.mobile_company.EntityManagerFactoryInstance;
 import org.tsystems.mobile_company.entities.Contract;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.util.List;
 
 /**
@@ -31,5 +32,11 @@ public class ContractDAO implements IEntityDAO<Contract> {
 
     public List<Contract> getAll() {
         return entityManager.createNamedQuery("Contract.getAllContracts", Contract.class).getResultList();
+    }
+
+    public Contract findContractByNumber(String number) {
+        Query query = entityManager.createNamedQuery("Contract.findContractByNumber", Contract.class);
+        query.setParameter("Number", number);
+        return (Contract) query.getSingleResult();
     }
 }

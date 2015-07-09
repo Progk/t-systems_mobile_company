@@ -3,7 +3,7 @@ package org.tsystems.mobile_company.entities;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by sergey on 28.06.15.
@@ -58,7 +58,7 @@ public class User implements Serializable {
      * Contracts which have this user
      */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private Set<Contract> contracts;
+    private List<Contract> contracts;
 
     @ManyToOne
     @JoinColumn(name = "USER_TYPE_ID", insertable = false, updatable = false)
@@ -142,11 +142,11 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public Set<Contract> getContracts() {
+    public List<Contract> getContracts() {
         return contracts;
     }
 
-    public void setContracts(Set<Contract> contracts) {
+    public void setContracts(List<Contract> contracts) {
         this.contracts = contracts;
     }
 

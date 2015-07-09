@@ -2,6 +2,9 @@ package org.tsystems.mobile_company;
 
 import org.tsystems.mobile_company.dao.ContractDAO;
 import org.tsystems.mobile_company.entities.*;
+import org.tsystems.mobile_company.services.ContractServices;
+import org.tsystems.mobile_company.services.UserServices;
+import org.tsystems.mobile_company.utils.ECareException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -12,11 +15,12 @@ import javax.persistence.EntityTransaction;
  */
 public class Main {
     public static void main(String[] args) {
-        /*EntityManager em = EntityManagerFactoryInstance.getEntityManager();
-        EntityTransaction et = em.getTransaction();
-        et.begin();
-        Contract c = new Contract("123", 2, 3, 2);
-        ContractDAO.getInstance().addOrUpdate(c);
-        et.commit();*/
+        try {
+            Contract c = ContractServices.getInstance().getContractByNumber("7111234532");
+            c.getSelectedOptions().clear();
+            ContractServices.getInstance().updateContract(c);
+        } catch (ECareException e) {
+            e.printStackTrace();
+        }
     }
 }

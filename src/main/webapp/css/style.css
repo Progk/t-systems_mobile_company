@@ -1,3 +1,12 @@
+.lockButtonWrapper {
+    display: inline;
+}
+
+#selectContract {
+    display: inline;
+    width: 25%;
+}
+
 .formWrapper {
     position: fixed;
     top: 50%;
@@ -7,3 +16,8 @@
     margin-top: -150px;
     margin-left: -300px;
 }
+
+#containerWrapper {
+    padding-top: 25px;
+}
+

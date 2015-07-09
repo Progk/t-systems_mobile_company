@@ -1,7 +1,7 @@
 package org.tsystems.mobile_company.entities;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by sergey on 28.06.15.
@@ -9,6 +9,10 @@ import java.util.Set;
 @Entity
 @Table(name = "LOCK_TYPE", catalog = "mobile_company")
 public class LockType {
+
+    public static final int ADMIN = 1;
+    public static final int USER = 2;
+    public static final int NONE = 3;
 
     @Id
     @GeneratedValue
@@ -23,7 +27,7 @@ public class LockType {
      * contracts which have this lock type
      */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "lockType")
-    private Set<Contract> contracts;
+    private List<Contract> contracts;
 
 
     public int getId() {

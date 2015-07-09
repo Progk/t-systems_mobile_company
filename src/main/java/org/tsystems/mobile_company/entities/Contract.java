@@ -1,13 +1,15 @@
 package org.tsystems.mobile_company.entities;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 /**
  * Created by sergey on 28.06.15.
  */
 @NamedQueries({
-        @NamedQuery(name="Contract.getAllContracts", query = "FROM Contract")
+        @NamedQuery(name="Contract.getAllContracts", query = "FROM Contract"),
+        @NamedQuery(name="Contract.findContractByNumber", query = "FROM Contract WHERE number=:Number")
 })
 
 
@@ -64,7 +66,7 @@ public class Contract {
     @JoinTable(name="SELECTED_OPTIONS",
             joinColumns={@JoinColumn(name="CONTRACT_ID")},
             inverseJoinColumns={@JoinColumn(name="OPTION_ID")})
-    private Set<Option> selectedOptions;
+    private List<Option> selectedOptions;
 
 
     public Contract(String number, int planId, int lockTypeId, int userId) {
@@ -109,12 +111,36 @@ public class Contract {
         this.lockType = lockType;
     }
 
-    public Set<Option> getSelectedOptions() {
+    public List<Option> getSelectedOptions() {
         return selectedOptions;
     }
 
-    public void setSelectedOptions(Set<Option> selectedOptions) {
+    public void setSelectedOptions(List<Option> selectedOptions) {
         this.selectedOptions = selectedOptions;
+    }
+
+    public int getLockTypeId() {
+        return lockTypeId;
+    }
+
+    public void setLockTypeId(int lockTypeId) {
+        this.lockTypeId = lockTypeId;
+    }
+
+    public int getPlanId() {
+        return planId;
+    }
+
+    public void setPlanId(int planId) {
+        this.planId = planId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     @Override

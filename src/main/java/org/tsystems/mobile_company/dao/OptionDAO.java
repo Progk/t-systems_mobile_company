@@ -4,6 +4,7 @@ import org.tsystems.mobile_company.EntityManagerFactoryInstance;
 import org.tsystems.mobile_company.entities.Option;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.util.List;
 
 /**
@@ -27,5 +28,11 @@ public class OptionDAO implements IEntityDAO<Option> {
 
     public List<Option> getAll() {
         return entityManager.createNamedQuery("Option.getAllOptions", Option.class).getResultList();
+    }
+
+    public void deleteAllOptionsForContract(int id) {
+        Query query = entityManager.createNamedQuery("Option.deleteAllOptionsForContract");
+        query.setParameter("Id", id);
+        query.executeUpdate();
     }
 }

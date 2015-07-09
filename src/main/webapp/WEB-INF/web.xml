@@ -32,6 +32,15 @@
         <url-pattern>/UserServlet</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>UserUpdateServlet</servlet-name>
+        <servlet-class>org.tsystems.mobile_company.servlets.UserUpdateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserUpdateServlet</servlet-name>
+        <url-pattern>/UserUpdateServlet</url-pattern>
+    </servlet-mapping>
+
 
     <welcome-file-list>
         <welcome-file>login.jsp</welcome-file>

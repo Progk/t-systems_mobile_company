@@ -4,6 +4,7 @@ import org.tsystems.mobile_company.EntityManagerFactoryInstance;
 import org.tsystems.mobile_company.entities.Plan;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.util.List;
 
 /**
@@ -27,5 +28,11 @@ public class PlanDAO implements IEntityDAO<Plan> {
 
     public List<Plan> getAll() {
         return entityManager.createNamedQuery("Plan.getAllPlans", Plan.class).getResultList();
+    }
+
+    public Plan findPlanByName(String name) {
+        Query query = entityManager.createNamedQuery("Plan.getPlanByName", Plan.class);
+        query.setParameter("Name", name);
+        return (Plan) query.getSingleResult();
     }
 }

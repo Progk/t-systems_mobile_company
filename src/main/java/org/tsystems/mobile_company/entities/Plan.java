@@ -1,13 +1,14 @@
 package org.tsystems.mobile_company.entities;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by sergey on 28.06.15.
  */
 @NamedQueries({
-        @NamedQuery(name="Plan.getAllPlans", query = "FROM Plan")
+        @NamedQuery(name="Plan.getAllPlans", query = "FROM Plan"),
+        @NamedQuery(name="Plan.getPlanByName", query = "FROM Plan WHERE name=:Name")
 })
 
 
@@ -35,7 +36,7 @@ public class Plan {
     @JoinTable(name="PLAN_OPTIONS",
             joinColumns={@JoinColumn(name="PLAN_ID")},
             inverseJoinColumns={@JoinColumn(name="OPTION_ID")})
-    private Set<Option> options;
+    private List<Option> options;
 
     public Plan(String name, int price) {
         this.name = name;
@@ -69,11 +70,11 @@ public class Plan {
         this.price = price;
     }
 
-    public Set<Option> getOptions() {
+    public List<Option> getOptions() {
         return options;
     }
 
-    public void setOptions(Set<Option> options) {
+    public void setOptions(List<Option> options) {
         this.options = options;
     }
 

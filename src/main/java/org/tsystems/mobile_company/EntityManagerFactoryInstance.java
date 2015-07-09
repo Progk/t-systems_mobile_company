@@ -11,14 +11,29 @@ import javax.persistence.Persistence;
  */
 public class EntityManagerFactoryInstance {
     public static String PERSISTENCE_UNIT_NAME = "mobile_company";
-    private static EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
-    private static EntityManager entityManager = entityManagerFactory.createEntityManager();
+    private static EntityManagerFactory entityManagerFactory;
+    private static  ThreadLocal<EntityManager> threadLocal;
 
     /*public static EntityManagerFactory getInstance() {
         return entityManagerFactory;
     }*/
 
+    static {
+        entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+        threadLocal = new ThreadLocal<EntityManager>();
+    }
+
+    private EntityManagerFactoryInstance() {
+
+    }
+
     public static EntityManager getEntityManager() {
+        EntityManager entityManager = threadLocal.get();
+        if (entityManager == null) {
+            entityManager = entityManagerFactory.createEntityManager();
+            threadLocal.set(entityManager);
+        }
+
         return entityManager;
     }
 
@@ -35,9 +50,10 @@ public class EntityManagerFactoryInstance {
         getEntityManager().getTransaction().rollback();
     }
 
-
-    private EntityManagerFactoryInstance() {
-
+    public static boolean isActiveTransaction() {
+        return getEntityManager().getTransaction().isActive();
     }
+
+
 
 }

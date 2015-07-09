@@ -1,15 +1,15 @@
 package org.tsystems.mobile_company.entities;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by sergey on 28.06.15.
  */
 
 @NamedQueries({
-        @NamedQuery(name="Option.getAllOptions", query = "FROM Option")
+        @NamedQuery(name="Option.getAllOptions", query = "FROM Option"),
+        @NamedQuery(name="Option.deleteAllOptionsForContract", query = "DELETE FROM Option WHERE id=:Id")
 })
 
 @Entity
@@ -37,13 +37,13 @@ public class Option {
      * plans which include this option
      */
     @ManyToMany(mappedBy="options")
-    private Set<Plan> plans = new HashSet<Plan>();
+    private List<Plan> plans;
 
     /**
      * contracts which include this option
      */
     @ManyToMany(mappedBy="selectedOptions")
-    private Set<Contract> contracts = new HashSet<Contract>();
+    private List<Contract> contracts;
 
     /**
      * locked options for this option
@@ -52,13 +52,13 @@ public class Option {
     @JoinTable(name="OPTIONS_CONSTRAINT",
             joinColumns={@JoinColumn(name="OPTION_ID")},
             inverseJoinColumns={@JoinColumn(name="OPTION_LOCKED_ID")})
-    private Set<Option> locked = new HashSet<Option>();
+    private List<Option> locked;
 
     /**
      * options for locked option
      */
     @ManyToMany(mappedBy="locked")
-    private Set<Option> options;
+    private List<Option> options;
 
 
     public Option(String name, int price, int costConnect) {
@@ -66,6 +66,8 @@ public class Option {
         this.price = price;
         this.costConnect = costConnect;
     }
+
+    
 
     public Option() {
     }
@@ -102,35 +104,35 @@ public class Option {
         this.costConnect = costConnect;
     }
 
-    public Set<Plan> getPlans() {
+    public List<Plan> getPlans() {
         return plans;
     }
 
-    public void setPlans(Set<Plan> plans) {
+    public void setPlans(List<Plan> plans) {
         this.plans = plans;
     }
 
-    public Set<Option> getLocked() {
+    public List<Option> getLocked() {
         return locked;
     }
 
-    public void setLocked(Set<Option> locked) {
+    public void setLocked(List<Option> locked) {
         this.locked = locked;
     }
 
-    public Set<Option> getOptions() {
+    public List<Option> getOptions() {
         return options;
     }
 
-    public void setOptions(Set<Option> options) {
+    public void setOptions(List<Option> options) {
         this.options = options;
     }
 
-    public Set<Contract> getContracts() {
+    public List<Contract> getContracts() {
         return contracts;
     }
 
-    public void setContracts(Set<Contract> contracts) {
+    public void setContracts(List<Contract> contracts) {
         this.contracts = contracts;
     }
 

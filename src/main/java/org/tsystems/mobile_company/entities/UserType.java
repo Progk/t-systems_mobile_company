@@ -1,7 +1,7 @@
 package org.tsystems.mobile_company.entities;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by sergey on 28.06.15.
@@ -25,7 +25,7 @@ public class UserType {
      * users which have this lock type
      */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userType")
-    private Set<User> users;
+    private List<User> users;
 
     public int getId() {
         return id;
@@ -43,11 +43,11 @@ public class UserType {
         this.type = type;
     }
 
-    public Set<User> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
-    public void setUsers(Set<User> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
     }
 

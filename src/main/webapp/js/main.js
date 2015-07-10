@@ -11,7 +11,42 @@ jQuery(document).ready(function ($) {
             data: sendData,
             async: false,
             success: function (result) {
-                $('#content').load('user.jsp #content');
+                $('#content').load('user.jsp #content', function() {
+                    //alert( "Load was performed." );
+                    $.each(result, function(key, value) {
+                        console.log(value);
+                        $(":checkbox[value=" + value + "]").prop('checked', true);
+                    });
+                });
+            }
+        });
+    });
+
+    $("#newClientForm").submit(function() {
+        console.log("newClientFormSubmit");
+        var sendData = $("#newClientForm").serialize();
+        $.ajax({
+            type: "POST",
+            url: "/AdminUpdateServlet",
+            data: sendData,
+            success: function(data)
+            {
+                console.log("success");
+            }
+        });
+        return false; // avoid to execute the actual submit of the form.
+    });
+
+    $("#selectPlanNewUser").on('change', function () {
+        console.log("selected plan " + $(this).val());
+        var sendData = {type: "selectPlanNewClient", plan: $(this).val()}
+        $.ajax({
+            url: "/AdminUpdateServlet",
+            method: "POST",
+            data: sendData,
+            async: false,
+            success: function (result) {
+                $('.selectNewClientOptionWrapper').load('admin.jsp #selectNewClientOption');
             }
         });
     });
@@ -96,4 +131,54 @@ function clickSelectPlanButton() {
     //selectNewPlan
     //newPlan
     /*console.log(document.getElementById("selectPlan").value)*/
+}
+
+function selectOptionForPlanNewUser() {
+    console.log("selected");
+    var selectedArr = [];
+    $("input:checkbox[name=optionNewPlan]:checked").each(function(){
+        selectedArr.push($(this).val());
+    });
+    var sendData = {type: "selectedOptionArrNewClient", selectedOptionArr: selectedArr}
+    $.ajax({
+        url: "/AdminUpdateServlet",
+        method: "POST",
+        data: sendData,
+        async: false,
+        success: function (result) {
+            $('.selectNewClientOptionWrapper').load('admin.jsp #selectNewClientOption', function() {
+                //alert( "Load was performed." );
+                selectedArr.forEach(function(entry) {
+                    console.log(entry);
+                    $(":checkbox[value=" + entry + "]").prop('checked', true);
+                });
+            });
+        }
+
+    });
+}
+
+function selectOptionForPlanByUser() {
+    console.log("selected");
+    var selectedArr = [];
+    $("input:checkbox[name=optionPlan]:checked").each(function(){
+        selectedArr.push($(this).val());
+    });
+    var sendData = {type: "selectOptionClient", selectedOptionArr: selectedArr}
+    $.ajax({
+        url: "/UserUpdateServlet",
+        method: "POST",
+        data: sendData,
+        async: false,
+        success: function (result) {
+            $('.selectOptionWrapper').load('user.jsp #selectOption', function() {
+                //alert( "Load was performed." );
+                selectedArr.forEach(function(entry) {
+                    console.log(entry);
+                    $(":checkbox[value=" + entry + "]").prop('checked', true);
+                });
+            });
+        }
+
+    });
 }

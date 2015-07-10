@@ -33,6 +33,7 @@
                         <li><a href="#changePlan" data-toggle="tab">Change Plan</a></li>
                         <li><a href="#options" data-toggle="tab">Options</a></li>
                     </ul>
+
                     <div id="my-tab-content" class="tab-content">
                         <div class="tab-pane active" id="currentContract">
                             <br>
@@ -95,6 +96,7 @@
                             </c:choose>
                         </div>
 
+
                         <div class="tab-pane" id="options">
                             <br>
                             <c:choose>
@@ -102,19 +104,33 @@
                                     <h4>${errorMessage}</h4>
                                 </c:when>
                                 <c:otherwise>
+                            <div class="selectOptionWrapper">
+                                <div class="col-sm-4" id="selectOption">
                                     <form class="form-horizontal" role="form" method="post">
-                                        <c:forEach var="option" items="${availableOptionList}">
-                                            <div class="checkbox">
-                                                <label><input type="checkbox" value="${option.name}">${option.name}
-                                                </label>
-                                            </div>
+                                        <c:forEach var="entry" items="${optionsForPlanMap}">
+                                            <c:choose>
+                                                <c:when test="${entry.value eq false}">
+                                                    <div class="checkbox col-sm-offset-1">
+                                                        <label><input type="checkbox" name="optionPlan" onclick="selectOptionForPlanByUser()" value="${entry.key.name}">${entry.key.name}
+                                                        </label>
+                                                    </div>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <div class="checkbox disabled col-sm-offset-1">
+                                                        <label><input type="checkbox" name="optionPlan" onclick="selectOptionForPlanByUser()" value="${entry.key.name}" disabled>${entry.key.name}
+                                                        </label>
+                                                    </div>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </c:forEach>
                                         <br>
                                         <button type="submit" class="btn btn-default" >Select</button>
                                     </form>
+                                    </div>
+                                </div>
                                 </c:otherwise>
                             </c:choose>
-                        </div>
+                            </div>
                     </div>
                 </div>
             </div>

@@ -30,6 +30,8 @@ public class OptionDAO implements IEntityDAO<Option> {
         return entityManager.createNamedQuery("Option.getAllOptions", Option.class).getResultList();
     }
 
+
+
     public void deleteAllOptionsForContract(int id) {
         Query query = entityManager.createNamedQuery("Option.deleteAllOptionsForContract");
         query.setParameter("Id", id);

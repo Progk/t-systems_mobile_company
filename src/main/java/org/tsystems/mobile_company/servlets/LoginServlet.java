@@ -1,6 +1,8 @@
 package org.tsystems.mobile_company.servlets;
 
+import org.tsystems.mobile_company.dao.PlanDAO;
 import org.tsystems.mobile_company.entities.*;
+import org.tsystems.mobile_company.services.PlanServices;
 import org.tsystems.mobile_company.services.UserServices;
 import org.tsystems.mobile_company.utils.ECareException;
 
@@ -42,11 +44,16 @@ public class LoginServlet extends HttpServlet {
         try {
             User user = UserServices.getInstance().findUserByEmailAndPassword(userEmail, userPassword);
             HttpSession httpSession = request.getSession();
-            httpSession.setMaxInactiveInterval(60); //60 sec for now
+            httpSession.setMaxInactiveInterval(60*60); //60 sec for now
             httpSession.setAttribute("email", userEmail);
             httpSession.setAttribute("user", user);
             ServletContext context = getServletContext();
             if (user.getUserTypeId() == UserType.ADMIN_TYPE) {
+                Boolean isAdmin = false;
+                List<Plan> allPlanList = PlanServices.getInstance().getAllPlan();
+                httpSession.setAttribute("isAdmin", isAdmin);
+                httpSession.setAttribute("allPlanList", allPlanList);
+                httpSession.setAttribute("errorMessage", "Select Contract");
                 response.sendRedirect(context.getContextPath() + "/AdminServlet");
             } else {
                 List<Option> availableOptionList = new ArrayList<>();

@@ -34,6 +34,11 @@ public class ContractDAO implements IEntityDAO<Contract> {
         return entityManager.createNamedQuery("Contract.getAllContracts", Contract.class).getResultList();
     }
 
+
+    public void contractUpdate(Contract contract) {
+        entityManager.refresh(contract);
+    }
+
     public Contract findContractByNumber(String number) {
         Query query = entityManager.createNamedQuery("Contract.findContractByNumber", Contract.class);
         query.setParameter("Number", number);

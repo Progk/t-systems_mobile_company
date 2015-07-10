@@ -40,6 +40,15 @@
         <servlet-name>UserUpdateServlet</servlet-name>
         <url-pattern>/UserUpdateServlet</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>AdminUpdateServlet</servlet-name>
+        <servlet-class>org.tsystems.mobile_company.servlets.AdminUpdateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminUpdateServlet</servlet-name>
+        <url-pattern>/AdminUpdateServlet</url-pattern>
+    </servlet-mapping>
 
 
     <welcome-file-list>

@@ -7,6 +7,10 @@
     width: 25%;
 }
 
+#findUserWrapper {
+    display: inline;
+}
+
 .formWrapper {
     position: fixed;
     top: 50%;
@@ -20,4 +24,13 @@
 #containerWrapper {
     padding-top: 25px;
 }
+
+.editUserWrapper {
+
+}
+
+.editUserSearchWrapper {
+
+}
+
 

@@ -1,6 +1,7 @@
 package org.tsystems.mobile_company.servlets;
 
 import org.tsystems.mobile_company.dao.PlanDAO;
+import org.tsystems.mobile_company.dao.UserDAO;
 import org.tsystems.mobile_company.entities.*;
 import org.tsystems.mobile_company.services.PlanServices;
 import org.tsystems.mobile_company.services.UserServices;
@@ -17,10 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by sergey on 01.07.15.
@@ -42,17 +40,21 @@ public class LoginServlet extends HttpServlet {
         String userPassword = request.getParameter("password");
 
         try {
-            User user = UserServices.getInstance().findUserByEmailAndPassword(userEmail, userPassword);
+            //User user = UserServices.getInstance().findUserByEmailAndPassword("admin@gmail.com", "iamadmin");
+            User user = UserServices.getInstance().findUserByEmailAndPassword("petr@gmail.com", "iampetr");
             HttpSession httpSession = request.getSession();
             httpSession.setMaxInactiveInterval(60*60); //60 sec for now
-            httpSession.setAttribute("email", userEmail);
+            //httpSession.setAttribute("email", "admin@gmail.com");
+            httpSession.setAttribute("email", "petr@gmail.com");
             httpSession.setAttribute("user", user);
             ServletContext context = getServletContext();
-            if (user.getUserType().getId() == UserType.ADMIN_TYPE) {
+            if (false) {
                 Boolean isAdmin = false;
                 List<Plan> allPlanList = PlanServices.getInstance().getAllPlan();
+                Map<User, Boolean> allUsers = UserServices.getInstance().getAllSimpleUserWithLockType();
                 httpSession.setAttribute("isAdmin", isAdmin);
                 httpSession.setAttribute("allPlanList", allPlanList);
+                httpSession.setAttribute("allSimpleUsersMap", allUsers);
                 httpSession.setAttribute("errorMessage", "Select Contract");
                 response.sendRedirect(context.getContextPath() + "/AdminServlet");
             } else {

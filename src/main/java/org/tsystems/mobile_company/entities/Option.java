@@ -21,41 +21,50 @@ public class Option {
     @Column(name = "ID", nullable = false)
     private int id;
 
+    /**
+     * Name of optin
+     */
     @Basic
     @Column(name = "NAME", nullable = false, length = 30)
     private String name;
 
+    /**
+     * Price of option
+     */
     @Basic
     @Column(name = "PRICE", nullable = false)
     private int price;
 
+    /**
+     * Coost connection
+     */
     @Basic
     @Column(name = "COST_CONNECT", nullable = false)
     private int costConnect;
 
     /**
-     * plans which include this option
+     * Plans which include this option
      */
     @ManyToMany(mappedBy="options", cascade = {CascadeType.ALL})
     private List<Plan> plans;
 
     /**
-     * contracts which include this option
+     * Contracts which include this option
      */
-    @ManyToMany(mappedBy="selectedOptions", cascade = {CascadeType.ALL})
+    @ManyToMany(mappedBy="selectedOptions")
     private List<Contract> contracts;
 
     /**
-     * locked options for this option
+     * Locked options for this option
      */
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany
     @JoinTable(name="OPTIONS_CONSTRAINT",
             joinColumns={@JoinColumn(name="OPTION_ID")},
             inverseJoinColumns={@JoinColumn(name="OPTION_LOCKED_ID")})
     private List<Option> locked;
 
     /**
-     * options for locked option
+     * Options for locked option
      */
     @ManyToMany(mappedBy="locked", cascade = {CascadeType.ALL})
     private List<Option> options;
@@ -76,9 +85,6 @@ public class Option {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

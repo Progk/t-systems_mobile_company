@@ -18,47 +18,53 @@ import java.util.Set;
 @Table(name = "CONTRACT", catalog = "mobile_company")
 public class Contract implements Serializable {
 
+    public static final int LOCKED_ADMIN = 1;
+    public static final int LOCKED_USER = 2;
+    public static final int LOCKED_NONE = 3;
+
     @Id
     @GeneratedValue
     @Column(name = "ID", nullable = false)
     private int id;
 
     /**
-     * number of phone
+     * Number of phone
      * format - 7 111 222 33 44
      */
     @Basic
     @Column(name = "NUMBER", nullable = false, length = 11)
     private String number;
 
+    /**
+     * Plan Id
+     */
     @Basic
     @Column(name = "PLAN_ID", nullable = false)
     private int planId;
 
     /**
-     * user which has this contract
+     * User which has this contract
      */
     @ManyToOne
     @JoinColumn(name = "USER_ID", referencedColumnName = "ID")
     private User user;
 
     /**
-     * type of lock
+     * Type of locked
      */
-    @ManyToOne
-    @JoinColumn(name = "LOCK_TYPE_ID", referencedColumnName = "ID")
-    private LockType lockType;
+    @Basic
+    @Column(name = "LOCK_TYPE_ID", nullable = false)
+    private int lockTypeId;
 
 
 
     /**
-     * selected options for this contract
+     * Selected options for this contract
      */
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name="SELECTED_OPTIONS",
             joinColumns={@JoinColumn(name="CONTRACT_ID")},
             inverseJoinColumns={@JoinColumn(name="OPTION_ID")})
-
     private List<Option> selectedOptions;
 
     public Contract() {
@@ -66,10 +72,6 @@ public class Contract implements Serializable {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getNumber() {
@@ -88,12 +90,31 @@ public class Contract implements Serializable {
         this.user = user;
     }
 
-    public LockType getLockType() {
-        return lockType;
+    public int getLockTypeId() {
+        return lockTypeId;
     }
 
-    public void setLockType(LockType lockType) {
-        this.lockType = lockType;
+    public boolean isLockedByAdmin() {
+        if (lockTypeId == LOCKED_ADMIN)
+            return true;
+        return false;
+    }
+
+    public boolean isLockedByUser() {
+        if (lockTypeId == LOCKED_USER)
+            return true;
+        return false;
+    }
+
+    public boolean isNotLocked() {
+        if (lockTypeId == LOCKED_NONE)
+            return true;
+        return false;
+    }
+
+
+    public void setLockTypeId(int lockTypeId) {
+        this.lockTypeId = lockTypeId;
     }
 
     public List<Option> getSelectedOptions() {

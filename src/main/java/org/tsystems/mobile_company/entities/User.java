@@ -17,42 +17,69 @@ import java.util.List;
 @Table(name = "USER", catalog = "mobile_company")
 public class User implements Serializable {
 
+    public static final int ADMIN_TYPE = 1;
+    public static final int SIMPLE_USER_TYPE =  2;
+
     @Id
     @GeneratedValue
     @Column(name = "ID", nullable = false)
     private int id;
 
+    /**
+     * Name
+     */
     @Basic
     @Column(name = "NAME", nullable = false, length = 20)
     private String name;
 
+    /**
+     * Surname
+     */
     @Basic
     @Column(name = "SURNAME", nullable = false, length = 30)
     private String surname;
 
+    /**
+     * Date of birth
+     */
     @Basic
     @Column(name = "DATE_OF_BIRTH", nullable = false)
     private Date dateOfBirth;
 
+    /**
+     * Passport data
+     */
     @Basic
     @Column(name = "PASSPORT_DATA", nullable = false)
     private int passportData;
 
+    /**
+     * Address
+     */
     @Basic
     @Column(name = "ADDRESS", nullable = false, length = 100)
     private String address;
 
+    /**
+     * Email
+     */
     @Basic
     @Column(name = "EMAIL", nullable = false, length = 50)
     private String email;
 
+    /**
+     * Password
+     */
     @Basic
     @Column(name = "PASSWORD", nullable = false, length = 100)
     private String password;
 
-    @ManyToOne
-    @JoinColumn(name = "USER_TYPE_ID", referencedColumnName = "ID")
-    private UserType userType;
+    /**
+     * User type id
+     */
+    @Basic
+    @Column(name = "USER_TYPE_ID", nullable = false, length = 10)
+    private int userType;
 
 
     /**
@@ -69,8 +96,12 @@ public class User implements Serializable {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public int getUserType() {
+        return userType;
+    }
+
+    public void setUserType(int userType) {
+        this.userType = userType;
     }
 
     public String getName() {
@@ -129,20 +160,26 @@ public class User implements Serializable {
         this.password = password;
     }
 
+
+
+    public boolean isAdminType() {
+        if (userType == ADMIN_TYPE)
+            return true;
+        return false;
+    }
+
+    public boolean isSimpleUserType() {
+        if (userType == SIMPLE_USER_TYPE)
+            return true;
+        return false;
+    }
+
     public List<Contract> getContracts() {
         return contracts;
     }
 
     public void setContracts(List<Contract> contracts) {
         this.contracts = contracts;
-    }
-
-    public UserType getUserType() {
-        return userType;
-    }
-
-    public void setUserType(UserType userType) {
-        this.userType = userType;
     }
 
     @Override

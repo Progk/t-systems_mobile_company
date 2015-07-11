@@ -12,7 +12,6 @@ import java.util.List;
  */
 public class ContractDAO implements IEntityDAO<Contract> {
 
-    private EntityManager entityManager = EntityManagerFactoryInstance.getEntityManager();
     private static volatile ContractDAO contractDAOInstance;
 
    public static ContractDAO getInstance() {
@@ -25,33 +24,24 @@ public class ContractDAO implements IEntityDAO<Contract> {
         return contractDAOInstance;
    }
 
-    private ContractDAO() {
-
-    }
-
     public Contract addOrUpdate(Contract entity) {
-        return entityManager.merge(entity);
+        return EntityManagerFactoryInstance.getEntityManager().merge(entity);
     }
 
     public Contract find(int id) {
-        return entityManager.find(Contract.class, id);
+        return EntityManagerFactoryInstance.getEntityManager().find(Contract.class, id);
     }
 
     public void remove(Contract entity) {
-        entityManager.remove(entity);
+        EntityManagerFactoryInstance.getEntityManager().remove(entity);
     }
 
     public List<Contract> getAll() {
-        return entityManager.createNamedQuery("Contract.getAllContracts", Contract.class).getResultList();
-    }
-
-
-    public void contractUpdate(Contract contract) {
-        entityManager.refresh(contract);
+        return EntityManagerFactoryInstance.getEntityManager().createNamedQuery("Contract.getAllContracts", Contract.class).getResultList();
     }
 
     public Contract findContractByNumber(String number) {
-        Query query = entityManager.createNamedQuery("Contract.findContractByNumber", Contract.class);
+        Query query = EntityManagerFactoryInstance.getEntityManager().createNamedQuery("Contract.findContractByNumber", Contract.class);
         query.setParameter("Number", number);
         return (Contract) query.getSingleResult();
     }

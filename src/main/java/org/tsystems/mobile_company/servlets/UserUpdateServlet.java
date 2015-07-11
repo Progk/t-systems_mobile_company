@@ -3,8 +3,9 @@ package org.tsystems.mobile_company.servlets;
 import com.google.gson.Gson;
 import jdk.nashorn.internal.ir.debug.JSONWriter;
 import org.tsystems.mobile_company.EntityManagerFactoryInstance;
+import org.tsystems.mobile_company.dao.OptionDAO;
+import org.tsystems.mobile_company.dao.PlanDAO;
 import org.tsystems.mobile_company.entities.Contract;
-import org.tsystems.mobile_company.entities.LockType;
 import org.tsystems.mobile_company.entities.Option;
 import org.tsystems.mobile_company.entities.Plan;
 import org.tsystems.mobile_company.services.ContractServices;
@@ -29,6 +30,12 @@ import java.util.function.BooleanSupplier;
  */
 @WebServlet(name = "UserUpdateServlet")
 public class UserUpdateServlet extends HttpServlet {
+
+    private ContractServices contractServices = ContractServices.getInstance();
+    private PlanServices planServices = PlanServices.getInstance();
+
+
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         process(request, response);
     }
@@ -73,9 +80,9 @@ public class UserUpdateServlet extends HttpServlet {
         Boolean isAdmin = (Boolean) httpSession.getAttribute("isAdmin");
         try {
             Contract contract = ContractServices.getInstance().getContractByNumber(contractNumber);
-            ContractServices.getInstance().changeLockType(contract, isAdmin);
-            ContractServices.getInstance().updateContract(contract);
-            httpSession.setAttribute("contractLockTypeId", contract.getLockType().getId());
+            contractServices.changeLockType(contract, isAdmin);
+            contractServices.updateContract(contract);
+            httpSession.setAttribute("contractLockTypeId", contract.getLockTypeId());
         } catch (ECareException e) {
             e.printStackTrace();
         }
@@ -84,19 +91,18 @@ public class UserUpdateServlet extends HttpServlet {
     private void selectContract(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession httpSession = request.getSession(false);
         String contractNumber = (String) request.getParameter("number");
-        List<Plan> availablePlanList = (ArrayList<Plan>) httpSession.getAttribute("availablePlanList");
-        List<Option> availableOptionList = (ArrayList<Option>) httpSession.getAttribute("availableOptionList");
-        availableOptionList.clear();
+        List<Plan> availablePlanList;
         try {
-            Contract contract = ContractServices.getInstance().getContractByNumber(contractNumber);
-            Plan plan = PlanServices.getInstance().findPlanById(contract.getPlanId());
-            availablePlanList = PlanServices.getInstance().getAllPlan();
+            Contract contract = contractServices.getContractByNumber(contractNumber);
+            Plan plan = planServices.findPlanById(contract.getPlanId());
+            availablePlanList = planServices.getAllPlan();
             availablePlanList.remove(plan);
             Map<Option, Boolean> optionsForPlan = new HashMap<Option, Boolean>();
             Map<String, String> selectedOptions = new LinkedHashMap<String, String>();
+
             String[] selectedOptionArr = new String[contract.getSelectedOptions().size()];
             for (Option p: plan.getOptions())
-                optionsForPlan.put(p, new Boolean(false));
+                optionsForPlan.put(p, false);
             for (int i = 0; i < contract.getSelectedOptions().size(); i++){
                 selectedOptions.put(String.valueOf(i+1),contract.getSelectedOptions().get(i).getName());
                 selectedOptionArr[i] = contract.getSelectedOptions().get(i).getName();
@@ -108,7 +114,7 @@ public class UserUpdateServlet extends HttpServlet {
             httpSession.setAttribute("availablePlanList", availablePlanList);;
             httpSession.setAttribute("contractNumber", contract.getNumber());
             httpSession.setAttribute("contractPlan", plan.getName());
-            httpSession.setAttribute("contractLockTypeId", contract.getLockType().getId());
+            httpSession.setAttribute("contractLockTypeId", contract.getLockTypeId());
             String json= new Gson().toJson(selectedOptions);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
@@ -122,24 +128,20 @@ public class UserUpdateServlet extends HttpServlet {
         HttpSession httpSession = request.getSession(false);
         String newPlan = (String) request.getParameter("plan");
         String contractNumber = (String) httpSession.getAttribute("contractNumber");
-
-        try { //delete all options in this contract(from old plan)
-            Contract contract = ContractServices.getInstance().getContractByNumber(contractNumber);
-
-            for (Option o: contract.getSelectedOptions()) {
-                o.getContracts().remove(contract);
-            }
-            contract.getSelectedOptions().clear();
-            ContractServices.getInstance().updateContract(contract);
-            Plan plan = PlanServices.getInstance().findPlanByName(newPlan);
-            contract.setPlanId(plan.getId());
-            contract.setSelectedOptions(plan.getOptions());
-            ContractServices.getInstance().updateContract(contract);
+        List<Plan> availablePlanList;
+        try {
+            Contract contract = contractServices.getContractByNumber(contractNumber);  //delete all options in this contract
+            contractServices.deleteAllOptions(contract);
+            Plan plan = planServices.findPlanByName(newPlan);
+            contract.setPlanId(plan.getId()); //set new plan
+            contractServices.updateContract(contract);
+            availablePlanList = planServices.getAllPlan();
+            availablePlanList.remove(plan);
             Map<Option, Boolean> optionsForPlan = (HashMap<Option, Boolean>)httpSession.getAttribute("optionsForPlanMap");
             optionsForPlan.clear();
-            for (Option p: plan.getOptions())
-                optionsForPlan.put(p, new Boolean(false));
+            httpSession.setAttribute("contractPlan", newPlan);
             httpSession.setAttribute("optionsForPlanMap", optionsForPlan);
+            httpSession.setAttribute("availablePlanList", availablePlanList);;
         } catch (ECareException e) {
             e.printStackTrace();
         }

@@ -13,7 +13,6 @@ import java.util.List;
  */
 public class UserDAO implements IEntityDAO<User> {
 
-    private EntityManager entityManager = EntityManagerFactoryInstance.getEntityManager();
     private static UserDAO userDAOInstance;
 
     public static UserDAO getInstance() {
@@ -32,23 +31,23 @@ public class UserDAO implements IEntityDAO<User> {
 
 
     public User addOrUpdate(User entity) {
-        return entityManager.merge(entity);
+        return EntityManagerFactoryInstance.getEntityManager().merge(entity);
     }
 
     public User find(int id) {
-        return entityManager.find(User.class, id);
+        return EntityManagerFactoryInstance.getEntityManager().find(User.class, id);
     }
 
     public void remove(User entity) {
-        entityManager.remove(entity);
+        EntityManagerFactoryInstance.getEntityManager().remove(entity);
     }
 
     public List<User> getAll() {
-        return entityManager.createNamedQuery("User.getAllUsers", User.class).getResultList();
+        return EntityManagerFactoryInstance.getEntityManager().createNamedQuery("User.getAllUsers", User.class).getResultList();
     }
 
     public User findByEmailAndPassword(String email, String password) {
-        Query query = entityManager.createNamedQuery("User.findUserByLoginAndPassword", User.class);
+        Query query = EntityManagerFactoryInstance.getEntityManager().createNamedQuery("User.findUserByLoginAndPassword", User.class);
         query.setParameter("Email", email);
         query.setParameter("Password", password);
         return (User) query.getSingleResult();

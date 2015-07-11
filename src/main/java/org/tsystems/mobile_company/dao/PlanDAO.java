@@ -12,7 +12,6 @@ import java.util.List;
  */
 public class PlanDAO implements IEntityDAO<Plan> {
 
-    private EntityManager entityManager = EntityManagerFactoryInstance.getEntityManager();
     private static PlanDAO planDAOInstance;
 
     public static PlanDAO getInstance() {
@@ -31,23 +30,23 @@ public class PlanDAO implements IEntityDAO<Plan> {
 
 
     public Plan addOrUpdate(Plan entity) {
-        return entityManager.merge(entity);
+        return EntityManagerFactoryInstance.getEntityManager().merge(entity);
     }
 
     public Plan find(int id) {
-        return entityManager.find(Plan.class, id);
+        return EntityManagerFactoryInstance.getEntityManager().find(Plan.class, id);
     }
 
     public void remove(Plan entity) {
-        entityManager.remove(entity);
+        EntityManagerFactoryInstance.getEntityManager().remove(entity);
     }
 
     public List<Plan> getAll() {
-        return entityManager.createNamedQuery("Plan.getAllPlans", Plan.class).getResultList();
+        return EntityManagerFactoryInstance.getEntityManager().createNamedQuery("Plan.getAllPlans", Plan.class).getResultList();
     }
 
     public Plan findPlanByName(String name) {
-        Query query = entityManager.createNamedQuery("Plan.getPlanByName", Plan.class);
+        Query query = EntityManagerFactoryInstance.getEntityManager().createNamedQuery("Plan.getPlanByName", Plan.class);
         query.setParameter("Name", name);
         return (Plan) query.getSingleResult();
     }

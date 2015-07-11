@@ -292,21 +292,60 @@
                                     <th>Surname</th>
                                     <th>Email</th>
                                     <th>Contract</th>
-                                    <th>Block</th>
+                                    <th>Blocked</th>
                                 </tr>
                                 </thead>
                                 <tbody>
+                                <c:forEach var="entry" items="${allSimpleUsersMap}" varStatus="loop">
                                 <tr>
-                                    <td>Petr</td>
-                                    <td>Petrov</td>
-                                    <td>petr@gmail.com</td>
-                                    <td><input type="button" value="Show"></td>
+                                    <td>${entry.key.name}</td>
+                                    <td>${entry.key.surname}</td>
+                                    <td>${entry.key.email}</td>
+                                    <td><button type="button" class="btn btn-info" data-toggle="modal"
+                                                data-target="#modal${loop.index}">Show</button></td>
+
+                                    <!-- Modal -->
+                                    <div id="modal${loop.index}" class="modal fade" role="dialog">
+                                        <div class="modal-dialog">
+
+                                            <!-- Modal content-->
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    <h4 class="modal-title">${entry.key.name}&nbsp;${entry.key.surname}</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <select class="form-control">
+                                                        <c:forEach var="contract" items="${entry.key.contracts}" >
+                                                            <option value="${contract.number}">${contract.number}</option>
+                                                        </c:forEach>
+                                                    </select>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
                                     <td>
-                                        <button type="button" class="btn btn-danger disabled" id="lockUser">
-                                            Lock
-                                        </button>
+                                        <c:choose>
+                                            <c:when test="${entry.value eq false}">
+                                                <button type="button" class="btn btn-success" id="lockUser">
+                                                    No
+                                                </button>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <button type="button" class="btn btn-danger" id="lockUser">
+                                                    Yes
+                                                </button>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </td>
                                 </tr>
+                                </c:forEach>
                                 </tbody>
                             </table>
                         </div>

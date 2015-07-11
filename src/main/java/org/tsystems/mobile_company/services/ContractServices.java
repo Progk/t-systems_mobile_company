@@ -2,13 +2,15 @@ package org.tsystems.mobile_company.services;
 
 import org.tsystems.mobile_company.EntityManagerFactoryInstance;
 import org.tsystems.mobile_company.dao.ContractDAO;
+import org.tsystems.mobile_company.dao.OptionDAO;
 import org.tsystems.mobile_company.entities.Contract;
-import org.tsystems.mobile_company.entities.LockType;
+import org.tsystems.mobile_company.entities.Option;
 import org.tsystems.mobile_company.entities.User;
 import org.tsystems.mobile_company.utils.ECareException;
 
 import javax.persistence.NoResultException;
 import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 
 /**
@@ -18,6 +20,7 @@ public class ContractServices {
 
     private static ContractServices contractServices;
     private ContractDAO contractDAO = ContractDAO.getInstance();
+    private OptionDAO optionDAO = OptionDAO.getInstance();
 
     private ContractServices() {
 
@@ -45,25 +48,41 @@ public class ContractServices {
 
     public void updateContract(Contract contract) {
         EntityManagerFactoryInstance.beginTransaction();
-        Contract c = contractDAO.addOrUpdate(contract);
-        EntityManagerFactoryInstance.flush();
+        contractDAO.addOrUpdate(contract);
         EntityManagerFactoryInstance.commitTransaction();
     }
 
     public void changeLockType(Contract contract, boolean isAdmin) {
         if (isAdmin) {
-            if (contract.getLockType().getId() == LockType.ADMIN)
-                contract.getLockType().setId(LockType.NONE);
+            if (contract.isLockedByAdmin())
+                contract.setLockTypeId(Contract.LOCKED_NONE);
             else
-                contract.getLockType().setId(LockType.ADMIN);
+                contract.setLockTypeId(Contract.LOCKED_ADMIN);
         } else {
-            switch (contract.getLockType().getId()) {
-                case LockType.USER:
-                    contract.getLockType().setId(LockType.NONE);
+            switch (contract.getLockTypeId()) {
+                case Contract.LOCKED_USER:
+                    contract.setLockTypeId(Contract.LOCKED_NONE);
                     break;
-                case LockType.NONE:
-                    contract.getLockType().setId(LockType.USER);
+                case Contract.LOCKED_NONE:
+                    contract.setLockTypeId(Contract.LOCKED_USER);;
             }
         }
+    }
+
+    public void deleteAllOptions(Contract contract) {
+        EntityManagerFactoryInstance.beginTransaction();
+        List<Option> allPlans = OptionDAO.getInstance().getAll();
+        for (Option option: allPlans) {
+            //EntityManagerFactoryInstance.getEntityManager().merge(option);
+            optionDAO.addOrUpdate(option);
+        }
+
+        for (Option option: contract.getSelectedOptions()) {
+            option.getContracts().remove(contract);
+        }
+        contract.getSelectedOptions().clear();
+        //EntityManagerFactoryInstance.getEntityManager().merge(contract);
+        contractDAO.addOrUpdate(contract);
+        EntityManagerFactoryInstance.commitTransaction();
     }
 }

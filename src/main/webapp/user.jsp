@@ -50,7 +50,7 @@
                                     <h4><b>Block Contract: </b>&nbsp;
                                         <div class="lockButtonWrapper"
                                         <c:choose>
-                                            <c:when test="${contractLockTypeId==1}">
+                                            <c:when test="${contractLockTypeId == 1}">
                                                 <div class="lockButtonWrapper">
                                                 <button type="button" class="btn btn-danger disabled" id="lockButton" onclick="clickLockButton()">
                                                     Lock by
@@ -58,7 +58,7 @@
                                                 </button>
                                         </div>
                                             </c:when>
-                                            <c:when test="${contractLockTypeId==2}">
+                                            <c:when test="${contractLockTypeId == 2}">
                                                 <div class="lockButtonWrapper">
                                                 <button type="button" class="btn btn-warning active" id="lockButton" onclick="clickLockButton()">
                                                     Lock by User

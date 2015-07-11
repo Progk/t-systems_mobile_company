@@ -12,7 +12,6 @@ import java.util.List;
  */
 public class OptionDAO implements IEntityDAO<Option> {
 
-    private EntityManager entityManager = EntityManagerFactoryInstance.getEntityManager();
     private static OptionDAO optionDAOInstance;
 
     public static OptionDAO getInstance() {
@@ -31,25 +30,25 @@ public class OptionDAO implements IEntityDAO<Option> {
 
 
     public Option addOrUpdate(Option entity) {
-        return entityManager.merge(entity);
+        return EntityManagerFactoryInstance.getEntityManager().merge(entity);
     }
 
     public Option find(int id) {
-        return entityManager.find(Option.class, id);
+        return EntityManagerFactoryInstance.getEntityManager().find(Option.class, id);
     }
 
     public void remove(Option entity) {
-        entityManager.remove(entity);
+        EntityManagerFactoryInstance.getEntityManager().remove(entity);
     }
 
     public List<Option> getAll() {
-        return entityManager.createNamedQuery("Option.getAllOptions", Option.class).getResultList();
+        return EntityManagerFactoryInstance.getEntityManager().createNamedQuery("Option.getAllOptions", Option.class).getResultList();
     }
 
 
 
     public void deleteAllOptionsForContract(int id) {
-        Query query = entityManager.createNamedQuery("Option.deleteAllOptionsForContract");
+        Query query = EntityManagerFactoryInstance.getEntityManager().createNamedQuery("Option.deleteAllOptionsForContract");
         query.setParameter("Id", id);
         query.executeUpdate();
     }

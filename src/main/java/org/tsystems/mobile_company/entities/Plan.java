@@ -21,16 +21,22 @@ public class Plan {
     @Column(name = "ID", nullable = false)
     private int id;
 
+    /**
+     * Name of plan
+     */
     @Basic
     @Column(name = "NAME", nullable = false, length = 30)
     private String name;
 
+    /**
+     * Price of plan
+     */
     @Basic
     @Column(name = "PRICE")
     private int price;
 
     /**
-     * options for this plan
+     * Available options for this plan
      */
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name="PLAN_OPTIONS",
@@ -50,9 +56,6 @@ public class Plan {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

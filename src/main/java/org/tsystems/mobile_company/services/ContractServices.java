@@ -17,10 +17,10 @@ import java.util.concurrent.locks.Lock;
 public class ContractServices {
 
     private static ContractServices contractServices;
-    private ContractDAO contractDAO;
+    private ContractDAO contractDAO = ContractDAO.getInstance();
 
     private ContractServices() {
-        contractDAO = new ContractDAO();
+
     }
 
     public static synchronized ContractServices getInstance() {
@@ -46,22 +46,23 @@ public class ContractServices {
     public void updateContract(Contract contract) {
         EntityManagerFactoryInstance.beginTransaction();
         Contract c = contractDAO.addOrUpdate(contract);
+        EntityManagerFactoryInstance.flush();
         EntityManagerFactoryInstance.commitTransaction();
     }
 
     public void changeLockType(Contract contract, boolean isAdmin) {
         if (isAdmin) {
-            if (contract.getLockTypeId() == LockType.ADMIN)
-                contract.setLockTypeId(LockType.NONE);
+            if (contract.getLockType().getId() == LockType.ADMIN)
+                contract.getLockType().setId(LockType.NONE);
             else
-                contract.setLockTypeId(LockType.ADMIN);
+                contract.getLockType().setId(LockType.ADMIN);
         } else {
-            switch (contract.getLockTypeId()) {
+            switch (contract.getLockType().getId()) {
                 case LockType.USER:
-                    contract.setLockTypeId(LockType.NONE);
+                    contract.getLockType().setId(LockType.NONE);
                     break;
                 case LockType.NONE:
-                    contract.setLockTypeId(LockType.USER);
+                    contract.getLockType().setId(LockType.USER);
             }
         }
     }

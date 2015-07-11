@@ -15,7 +15,7 @@
 <div class="containerWrapper" id="containerWrapper">
     <div class="container">
         <div class="panel panel-default">
-            <div class="panel-heading">
+            <div class="panel-heading" id="head">
                 <h3><b>Client:</b>&nbsp;&nbsp;${user.name}&nbsp;${user.surname}</h3>
                 <h3><b>Contract:</b>
                 <select class="form-control" id="selectContract">
@@ -24,6 +24,7 @@
                     </c:forEach>
                 </select>
                 </h3>
+                <button type="button" id="exitUserButton" class="btn btn-default" onclick="exitUser()">Exit</button>
             </div>
 
             <div class="panel-body" id="panelBody">

@@ -48,7 +48,7 @@ public class LoginServlet extends HttpServlet {
             httpSession.setAttribute("email", userEmail);
             httpSession.setAttribute("user", user);
             ServletContext context = getServletContext();
-            if (user.getUserTypeId() == UserType.ADMIN_TYPE) {
+            if (user.getUserType().getId() == UserType.ADMIN_TYPE) {
                 Boolean isAdmin = false;
                 List<Plan> allPlanList = PlanServices.getInstance().getAllPlan();
                 httpSession.setAttribute("isAdmin", isAdmin);

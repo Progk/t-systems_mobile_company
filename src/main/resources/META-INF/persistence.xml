@@ -7,10 +7,8 @@
         <class>org.tsystems.mobile_company.entities.LockType</class>
         <class>org.tsystems.mobile_company.entities.Option</class>
         <class>org.tsystems.mobile_company.entities.Plan</class>
-        <class>org.tsystems.mobile_company.entities.SelectedOptionsEntity</class>
         <class>org.tsystems.mobile_company.entities.User</class>
         <class>org.tsystems.mobile_company.entities.UserType</class>
-        <class>org.tsystems.mobile_company.entities.UserContractsEntity</class>
         <properties>
             <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/mobile_company"/>
             <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>

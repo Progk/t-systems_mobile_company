@@ -15,10 +15,10 @@ import java.util.Set;
  */
 public class PlanServices {
     private static PlanServices planServices;
-    private PlanDAO planDAO;
+    private PlanDAO planDAO = PlanDAO.getInstance();
 
     private PlanServices() {
-        planDAO = new PlanDAO();
+
     }
 
     public static synchronized PlanServices getInstance() {

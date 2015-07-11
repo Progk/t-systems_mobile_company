@@ -1,7 +1,7 @@
 jQuery(document).ready(function ($) {
     //$('#selectPlan').tab();
     console.log("ready");
-
+    
     $("#selectContract").on('change', function () {
         console.log("selected " + $(this).val());
         var sendData = {type: "selectContract", number: $(this).val()}
@@ -181,4 +181,9 @@ function selectOptionForPlanByUser() {
         }
 
     });
+}
+
+
+function exitUser() {
+
 }

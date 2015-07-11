@@ -1,6 +1,7 @@
 package org.tsystems.mobile_company.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
@@ -15,7 +16,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "CONTRACT", catalog = "mobile_company")
-public class Contract {
+public class Contract implements Serializable {
 
     @Id
     @GeneratedValue
@@ -34,27 +35,18 @@ public class Contract {
     @Column(name = "PLAN_ID", nullable = false)
     private int planId;
 
-    @Basic
-    @Column(name = "LOCK_TYPE_ID", nullable = false)
-    private int lockTypeId;
-
-    @Basic
-    @Column(name = "USER_ID", nullable = false)
-    private int userId;
-
-
     /**
      * user which has this contract
      */
     @ManyToOne
-    @JoinColumn(name = "USER_ID", insertable = false, updatable = false)
+    @JoinColumn(name = "USER_ID", referencedColumnName = "ID")
     private User user;
 
     /**
      * type of lock
      */
     @ManyToOne
-    @JoinColumn(name = "LOCK_TYPE_ID", insertable = false, updatable = false)
+    @JoinColumn(name = "LOCK_TYPE_ID", referencedColumnName = "ID")
     private LockType lockType;
 
 
@@ -66,15 +58,8 @@ public class Contract {
     @JoinTable(name="SELECTED_OPTIONS",
             joinColumns={@JoinColumn(name="CONTRACT_ID")},
             inverseJoinColumns={@JoinColumn(name="OPTION_ID")})
+
     private List<Option> selectedOptions;
-
-
-    public Contract(String number, int planId, int lockTypeId, int userId) {
-        this.number = number;
-        this.planId = planId;
-        this.lockTypeId = lockTypeId;
-        this.userId = userId;
-    }
 
     public Contract() {
     }
@@ -119,13 +104,6 @@ public class Contract {
         this.selectedOptions = selectedOptions;
     }
 
-    public int getLockTypeId() {
-        return lockTypeId;
-    }
-
-    public void setLockTypeId(int lockTypeId) {
-        this.lockTypeId = lockTypeId;
-    }
 
     public int getPlanId() {
         return planId;
@@ -133,14 +111,6 @@ public class Contract {
 
     public void setPlanId(int planId) {
         this.planId = planId;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 
     @Override

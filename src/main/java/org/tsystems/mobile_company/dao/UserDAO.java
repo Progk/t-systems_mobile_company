@@ -14,6 +14,22 @@ import java.util.List;
 public class UserDAO implements IEntityDAO<User> {
 
     private EntityManager entityManager = EntityManagerFactoryInstance.getEntityManager();
+    private static UserDAO userDAOInstance;
+
+    public static UserDAO getInstance() {
+        if (userDAOInstance == null) {
+            synchronized (ContractDAO.class) {
+                if (userDAOInstance == null)
+                    userDAOInstance = new UserDAO();
+            }
+        }
+        return userDAOInstance;
+    }
+
+    private UserDAO() {
+
+    }
+
 
     public User addOrUpdate(User entity) {
         return entityManager.merge(entity);

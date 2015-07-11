@@ -11,10 +11,10 @@ import javax.persistence.PersistenceException;
  */
 public class OptionServices {
     private static OptionServices optionServices;
-    private OptionDAO optionDAO;
+    private OptionDAO optionDAO = OptionDAO.getInstance();
 
     private OptionServices() {
-        optionDAO = new OptionDAO();
+
     }
 
     public static synchronized OptionServices getInstance() {

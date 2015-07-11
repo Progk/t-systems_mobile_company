@@ -26,10 +26,10 @@ import java.util.Set;
 public class UserServices {
 
     private static UserServices userServices;
-    private UserDAO userDAO;
+    private UserDAO userDAO = UserDAO.getInstance();
 
     private UserServices() {
-        userDAO = new UserDAO();
+
     }
 
     public static synchronized UserServices getInstance() {
@@ -59,7 +59,7 @@ public class UserServices {
         } catch (ParseException e) {
             date = new Date(System.currentTimeMillis());
         }
-        User user = new User(name, surname, date, Integer.valueOf(passport), address, email, password, UserType.ADMIN_TYPE);
+        User user = null;//= new User(name, surname, date, Integer.valueOf(passport), address, email, password, UserType.ADMIN_TYPE);
         EntityManagerFactoryInstance.beginTransaction();
         user = userDAO.addOrUpdate(user);
         EntityManagerFactoryInstance.commitTransaction();

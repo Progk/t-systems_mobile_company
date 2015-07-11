@@ -41,6 +41,9 @@ public class EntityManagerFactoryInstance {
         getEntityManager().getTransaction().begin();
     }
 
+    public static void flush() {
+        getEntityManager().flush();
+    }
 
     public static void commitTransaction() {
         getEntityManager().getTransaction().commit();

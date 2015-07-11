@@ -36,13 +36,13 @@ public class Option {
     /**
      * plans which include this option
      */
-    @ManyToMany(mappedBy="options")
+    @ManyToMany(mappedBy="options", cascade = {CascadeType.ALL})
     private List<Plan> plans;
 
     /**
      * contracts which include this option
      */
-    @ManyToMany(mappedBy="selectedOptions")
+    @ManyToMany(mappedBy="selectedOptions", cascade = {CascadeType.ALL})
     private List<Contract> contracts;
 
     /**
@@ -57,7 +57,7 @@ public class Option {
     /**
      * options for locked option
      */
-    @ManyToMany(mappedBy="locked")
+    @ManyToMany(mappedBy="locked", cascade = {CascadeType.ALL})
     private List<Option> options;
 
 

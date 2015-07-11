@@ -13,8 +13,19 @@ import java.util.List;
 public class ContractDAO implements IEntityDAO<Contract> {
 
     private EntityManager entityManager = EntityManagerFactoryInstance.getEntityManager();
+    private static volatile ContractDAO contractDAOInstance;
 
-    public ContractDAO() {
+   public static ContractDAO getInstance() {
+       if (contractDAOInstance == null) {
+           synchronized (ContractDAO.class) {
+               if (contractDAOInstance == null)
+                   contractDAOInstance = new ContractDAO();
+           }
+       }
+        return contractDAOInstance;
+   }
+
+    private ContractDAO() {
 
     }
 

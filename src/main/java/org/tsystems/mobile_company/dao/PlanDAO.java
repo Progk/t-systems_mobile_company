@@ -13,6 +13,22 @@ import java.util.List;
 public class PlanDAO implements IEntityDAO<Plan> {
 
     private EntityManager entityManager = EntityManagerFactoryInstance.getEntityManager();
+    private static PlanDAO planDAOInstance;
+
+    public static PlanDAO getInstance() {
+        if (planDAOInstance == null) {
+            synchronized (ContractDAO.class) {
+                if (planDAOInstance == null)
+                    planDAOInstance = new PlanDAO();
+            }
+        }
+        return planDAOInstance;
+    }
+
+    private PlanDAO() {
+
+    }
+
 
     public Plan addOrUpdate(Plan entity) {
         return entityManager.merge(entity);

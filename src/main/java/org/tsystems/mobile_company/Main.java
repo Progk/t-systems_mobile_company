@@ -16,9 +16,9 @@ import javax.persistence.EntityTransaction;
 public class Main {
     public static void main(String[] args) {
         try {
-            Contract c = ContractServices.getInstance().getContractByNumber("7111234532");
-            c.getSelectedOptions().clear();
-            ContractServices.getInstance().updateContract(c);
+            Contract contract = ContractServices.getInstance().getContractByNumber("7111234532");
+            contract.getSelectedOptions().clear();
+            ContractServices.getInstance().updateContract(contract);
         } catch (ECareException e) {
             e.printStackTrace();
         }

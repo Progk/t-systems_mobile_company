@@ -50,9 +50,10 @@ public class User implements Serializable {
     @Column(name = "PASSWORD", nullable = false, length = 100)
     private String password;
 
-    @Basic
-    @Column(name = "USER_TYPE_ID", nullable = false)
-    private int userTypeId;
+    @ManyToOne
+    @JoinColumn(name = "USER_TYPE_ID", referencedColumnName = "ID")
+    private UserType userType;
+
 
     /**
      * Contracts which have this user
@@ -60,20 +61,6 @@ public class User implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Contract> contracts;
 
-    @ManyToOne
-    @JoinColumn(name = "USER_TYPE_ID", insertable = false, updatable = false)
-    private UserType userType;
-
-    public User(String name, String surname, Date dateOfBirth, int passportData, String address, String email, String password, int userTypeId) {
-        this.name = name;
-        this.surname = surname;
-        this.dateOfBirth = dateOfBirth;
-        this.passportData = passportData;
-        this.address = address;
-        this.email = email;
-        this.password = password;
-        this.userTypeId = userTypeId;
-    }
 
     public User() {
     }
@@ -156,14 +143,6 @@ public class User implements Serializable {
 
     public void setUserType(UserType userType) {
         this.userType = userType;
-    }
-
-    public int getUserTypeId() {
-        return userTypeId;
-    }
-
-    public void setUserTypeId(int userTypeId) {
-        this.userTypeId = userTypeId;
     }
 
     @Override

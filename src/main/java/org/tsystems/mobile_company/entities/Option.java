@@ -9,7 +9,9 @@ import java.util.List;
 
 @NamedQueries({
         @NamedQuery(name="Option.getAllOptions", query = "FROM Option"),
-        @NamedQuery(name="Option.deleteAllOptionsForContract", query = "DELETE FROM Option WHERE id=:Id")
+        @NamedQuery(name="Option.deleteAllOptionsForContract", query = "DELETE FROM Option WHERE id=:Id"),
+        @NamedQuery(name="Option.getOptionByName", query = "FROM Option WHERE name=:Name"),
+        @NamedQuery(name="Option.deleteOptionByName", query = "DELETE Option WHERE name=:Name")
 })
 
 @Entity
@@ -51,13 +53,13 @@ public class Option {
     /**
      * Contracts which include this option
      */
-    @ManyToMany(mappedBy="selectedOptions")
+    @ManyToMany(mappedBy="selectedOptions", cascade = CascadeType.ALL)
     private List<Contract> contracts;
 
     /**
      * Locked options for this option
      */
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name="OPTIONS_CONSTRAINT",
             joinColumns={@JoinColumn(name="OPTION_ID")},
             inverseJoinColumns={@JoinColumn(name="OPTION_LOCKED_ID")})

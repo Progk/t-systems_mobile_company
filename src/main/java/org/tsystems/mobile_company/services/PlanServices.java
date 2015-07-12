@@ -1,12 +1,16 @@
 package org.tsystems.mobile_company.services;
 
 import org.tsystems.mobile_company.EntityManagerFactoryInstance;
+import org.tsystems.mobile_company.dao.OptionDAO;
 import org.tsystems.mobile_company.dao.PlanDAO;
 import org.tsystems.mobile_company.dao.UserDAO;
+import org.tsystems.mobile_company.entities.Option;
 import org.tsystems.mobile_company.entities.Plan;
+import org.tsystems.mobile_company.entities.User;
 import org.tsystems.mobile_company.utils.ECareException;
 
 import javax.persistence.NoResultException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -16,6 +20,7 @@ import java.util.Set;
 public class PlanServices {
     private static PlanServices planServices;
     private PlanDAO planDAO = PlanDAO.getInstance();
+    private OptionDAO optionDAO = OptionDAO.getInstance();
 
     private PlanServices() {
 
@@ -38,6 +43,19 @@ public class PlanServices {
                 EntityManagerFactoryInstance.rollbackTransaction();
             throw new ECareException("No plan with this id");
         }
+        return plan;
+    }
+
+    public Plan createNewPlan(String name, int price, String[] options) {
+        List<Option> optionsList = new LinkedList<>();
+        EntityManagerFactoryInstance.beginTransaction();
+        Plan plan = new Plan(name, price, optionsList);
+        for (String s : options) {
+            Option option = optionDAO.findByName(s);
+            plan.getOptions().add(option);
+        }
+        planDAO.addOrUpdate(plan);
+        EntityManagerFactoryInstance.commitTransaction();
         return plan;
     }
 
@@ -67,5 +85,13 @@ public class PlanServices {
             throw new ECareException("Error while read plans");
         }
         return plan;
+    }
+
+    public void createNewPlan(User user, String newPlan) {
+        try {
+            Plan plan = findPlanByName(newPlan);
+        } catch (ECareException e) {
+            e.printStackTrace();
+        }
     }
 }

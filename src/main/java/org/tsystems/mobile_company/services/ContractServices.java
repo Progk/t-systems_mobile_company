@@ -10,6 +10,7 @@ import org.tsystems.mobile_company.utils.ECareException;
 
 import javax.persistence.NoResultException;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 
@@ -74,6 +75,7 @@ public class ContractServices {
         List<Option> allPlans = OptionDAO.getInstance().getAll();
         for (Option option: allPlans) {
             //EntityManagerFactoryInstance.getEntityManager().merge(option);
+            option.getContracts().remove(contract);
             optionDAO.addOrUpdate(option);
         }
 
@@ -84,5 +86,37 @@ public class ContractServices {
         //EntityManagerFactoryInstance.getEntityManager().merge(contract);
         contractDAO.addOrUpdate(contract);
         EntityManagerFactoryInstance.commitTransaction();
+    }
+
+    public void addOptions(Contract contract, List<String> newOptions) {
+        EntityManagerFactoryInstance.beginTransaction();
+        contract.setSelectedOptions(new LinkedList<Option>());
+        for (String newOption : newOptions) {
+            Option option = optionDAO.findByName(newOption);
+            option.getContracts().add(contract);
+            optionDAO.addOrUpdate(option);
+            contract.getSelectedOptions().add(option);
+        }
+        /*for (Option option: allPlans) {
+            //EntityManagerFactoryInstance.getEntityManager().merge(option);
+            optionDAO.addOrUpdate(option);
+        }
+
+        for (Option option: contract.getSelectedOptions()) {
+            option.getContracts().remove(contract);
+        }
+        contract.getSelectedOptions().clear();*/
+        //EntityManagerFactoryInstance.getEntityManager().merge(contract);
+        contractDAO.addOrUpdate(contract);
+        EntityManagerFactoryInstance.commitTransaction();
+
+    }
+
+    public Contract createNewContract(User user, String number, int planId, int lockType) {
+        Contract contract = new Contract(number,planId, user, lockType);
+        EntityManagerFactoryInstance.beginTransaction();
+        contract = contractDAO.addOrUpdate(contract);
+        EntityManagerFactoryInstance.commitTransaction();
+        return contract;
     }
 }

@@ -10,7 +10,8 @@ import java.util.List;
  */
 @NamedQueries({
         @NamedQuery(name="User.findUserByLoginAndPassword", query="FROM User u WHERE u.email=:Email AND u.password=:Password"),
-        @NamedQuery(name="User.getAllUsers", query = "FROM User")
+        @NamedQuery(name="User.getAllUsers", query = "FROM User"),
+        @NamedQuery(name="User.getUserByEmail", query = "FROM User WHERE email=:Email"),
 })
 
 @Entity
@@ -90,6 +91,17 @@ public class User implements Serializable {
 
 
     public User() {
+    }
+
+    public User(String name, String surname, Date dateOfBirth, int passportData, String address, String email, String password, int userType) {
+        this.name = name;
+        this.surname = surname;
+        this.dateOfBirth = dateOfBirth;
+        this.passportData = passportData;
+        this.address = address;
+        this.email = email;
+        this.password = password;
+        this.userType = userType;
     }
 
     public int getId() {

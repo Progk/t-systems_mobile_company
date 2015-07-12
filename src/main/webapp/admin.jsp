@@ -33,195 +33,18 @@
                         <%--New Client--%>
                         <div class="tab-pane active" id="newClient">
                             <br>
-
-                            <form class="form-horizontal" role="form" id="newClientForm" action="/AdminUpdateServlet"
-                                  method="post">
-                                <div class="form-group ">
-                                    <label class="control-label col-sm-1" for="name">Name:</label>
-
-                                    <div class="col-sm-4">
-
-                                        <input type="text" class="form-control col-sm-offset-1" id="name" name="name"
-                                               placeholder="Enter name" required>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-sm-1" for="surname">Surname:</label>
-
-                                    <div class="col-sm-4">
-                                        <input type="text" class="form-control col-sm-offset-1" id="surname"
-                                               name="surname" placeholder="Enter surname" required>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-sm-1" for="date">Date:</label>
-
-                                    <div class="col-sm-4">
-                                        <input type="date" class="form-control col-sm-offset-1" id="date" name="date"
-                                               placeholder="Enter Date" required>
-                                    </div>
-                                </div>
-                                <div class="form-group ">
-                                    <label class="control-label col-sm-1" for="passport">Passport:</label>
-
-                                    <div class="col-sm-4">
-                                        <input type="text" class="form-control col-sm-offset-1" id="passport"
-                                               name="passport" placeholder="Enter Passport" required>
-                                    </div>
-                                </div>
-                                <div class="form-group ">
-                                    <label class="control-label col-sm-1" for="address">Address:</label>
-
-                                    <div class="col-sm-4">
-                                        <input type="text" class="form-control col-sm-offset-1" id="address"
-                                               name="address" placeholder="Enter address" required>
-                                    </div>
-                                </div>
-                                <div class="form-group ">
-                                    <label class="control-label col-sm-1" for="email">Email:</label>
-
-                                    <div class="col-sm-4">
-                                        <input type="text" class="form-control col-sm-offset-1" id="email" name="email"
-                                               placeholder="Enter email" required>
-                                    </div>
-                                </div>
-                                <div class="form-group ">
-                                    <label class="control-label col-sm-1" for="password">Password:</label>
-
-                                    <div class="col-sm-4">
-                                        <input type="password" class="form-control col-sm-offset-1" id="password"
-                                               name="password" placeholder="Enter password" required>
-                                    </div>
-                                </div>
-                                <div class="form-group ">
-                                    <label class="control-label col-sm-1" for="number">Number:</label>
-
-                                    <div class="col-sm-4">
-                                        <input type="text" class="form-control col-sm-offset-1" id="number"
-                                               name="number"
-                                               placeholder="Enter phone number" required>
-                                    </div>
-                                </div>
-                                <input type="hidden" name="type" value="addNewUser">
-                                <div class="form-group ">
-                                    <label class="control-label col-sm-1" for="selectPlanNewUser">Plan:</label>
-
-                                    <div class="col-sm-4">
-                                        <select class="form-control col-sm-offset-1" id="selectPlanNewUser">
-                                            <c:forEach var="plan" items="${allPlanList}">
-                                                <option value="${plan.name}">${plan.name}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group ">
-                                    <label class="control-label col-sm-1">Options:</label>
-
-                                    <div class="selectNewClientOptionWrapper">
-                                        <div class="col-sm-4" id="selectNewClientOption">
-                                            <c:forEach var="entry" items="${optionsForPlanMap}">
-                                                <c:choose>
-                                                    <c:when test="${entry.value eq false}">
-                                                        <div class="checkbox col-sm-offset-1">
-                                                            <label><input type="checkbox" name="optionNewPlan" onclick="selectOptionForPlanNewUser()" value="${entry.key.name}">${entry.key.name}
-                                                            </label>
-                                                        </div>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <div class="checkbox disabled col-sm-offset-1">
-                                                            <label><input type="checkbox" name="optionNewPlan" onclick="selectOptionForPlanNewUser()" value="${entry.key.name}" disabled>${entry.key.name}
-                                                            </label>
-                                                        </div>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </c:forEach>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-sm-offset-1 col-sm-4">
-                                        <button type="submit" class="btn btn-default">Submit</button>
-                                    </div>
-                                </div>
-                            </form>
+                            <%@ include file="adminNewUserForm.jsp" %>
                         </div>
 
                         <%--Edit User--%>
                         <div class="tab-pane" id="editUsers">
                             <br>
-
-                            <div class="editUserSearchWrapper">
-                                <h4><label for="enterNumber">Enter Phone:</label></h4>
-                                <input type="text" class="form-control" id="enterNumber">
-                                <input type="submit" id="searchNumber" value="Search"/>
-                            </div>
-
-                            <hr>
-
-                            <br>
-                            <br>
-
-                            <div class="editUserWrapper">
-                                <h4><b>Current plan: </b>Plan</h4>
-                                <h4><b>Number: </b>Number</h4>
-                                <br>
-                                <label class="control-label col-sm-1" for="selectPlan">Plan:</label>
-
-                                <div class="col-sm-4">
-                                    <select class="form-control col-sm-offset-1" id="selectPlan">
-                                        <c:forEach var="contract" items="${user.contracts}">
-                                            <option value="${contract.number}">${contract.number}</option>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-                            </div>
+                            <%@ include file="adminEditUser.jsp" %>
                         </div>
 
                         <%--Edit plan--%>
                         <div class="tab-pane" id="editPlans">
-                            <h4><b>Select Plan:</b>
-                                <select class="form-control" id="selectContract">
-                                    <c:forEach var="contract" items="${user.contracts}">
-                                        <option value="${contract.number}">${contract.number}</option>
-                                    </c:forEach>
-                                </select>
-                                <input type="submit" id="deletePlan" value="Delete"/>
-                            </h4>
-                            <hr>
-                            <h4>Add Plan</h4>
-
-                            <form class="form-horizontal" role="form" action="/AdminUpdateServlet" method="post">
-                                <div class="form-group ">
-                                    <label class="control-label col-sm-1" for="namePlan">Name plan:</label>
-
-                                    <div class="col-sm-4">
-                                        <input type="text" class="form-control col-sm-offset-1" id="namePlan"
-                                               name="namePlan"
-                                               placeholder="Enter plan name">
-                                    </div>
-                                </div>
-
-                                <div class="form-group ">
-                                    <label class="control-label col-sm-1" for="planCost">Cost:</label>
-
-                                    <div class="col-sm-4">
-                                        <input type="number" class="form-control col-sm-offset-1" id="planCost"
-                                               name="planCost" placeholder="Enter cost">
-                                    </div>
-                                </div>
-                                <div class="form-group ">
-                                    <label class="control-label col-sm-1">Select options:</label>
-
-                                    <div class="col-sm-4">
-                                        <c:forEach var="contract" items="${user.contracts}">
-                                            <div class="checkbox">
-                                                <label><input type="checkbox" value="${option.name}">${option.name}
-                                                </label>
-                                            </div>
-                                        </c:forEach>
-                                    </div>
-                                </div>
-                            </form>
+                            <%@ include file="adminEditPlan.jsp" %>
                         </div>
 
                         <%--Add options--%>
@@ -285,69 +108,7 @@
 
                         <%--All Users--%>
                         <div class="tab-pane" id="allUsers">
-                            <table class="table table-hover">
-                                <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Surname</th>
-                                    <th>Email</th>
-                                    <th>Contract</th>
-                                    <th>Blocked</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <c:forEach var="entry" items="${allSimpleUsersMap}" varStatus="loop">
-                                <tr>
-                                    <td>${entry.key.name}</td>
-                                    <td>${entry.key.surname}</td>
-                                    <td>${entry.key.email}</td>
-                                    <td><button type="button" class="btn btn-info" data-toggle="modal"
-                                                data-target="#modal${loop.index}">Show</button></td>
-
-                                    <!-- Modal -->
-                                    <div id="modal${loop.index}" class="modal fade" role="dialog">
-                                        <div class="modal-dialog">
-
-                                            <!-- Modal content-->
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                    <h4 class="modal-title">${entry.key.name}&nbsp;${entry.key.surname}</h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <select class="form-control">
-                                                        <c:forEach var="contract" items="${entry.key.contracts}" >
-                                                            <option value="${contract.number}">${contract.number}</option>
-                                                        </c:forEach>
-                                                    </select>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${entry.value eq false}">
-                                                <button type="button" class="btn btn-success" id="lockUser">
-                                                    No
-                                                </button>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <button type="button" class="btn btn-danger" id="lockUser">
-                                                    Yes
-                                                </button>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                </tr>
-                                </c:forEach>
-                                </tbody>
-                            </table>
+                            <%@ include file="adminAllUsers.jsp" %>
                         </div>
                     </div>
                 </div>

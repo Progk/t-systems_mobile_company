@@ -29,6 +29,11 @@ public class UserDAO implements IEntityDAO<User> {
 
     }
 
+    public User findUserByEmail(String email) {
+        Query query = EntityManagerFactoryInstance.getEntityManager().createNamedQuery("User.getUserByEmail", User.class);
+        query.setParameter("Email", email);
+        return (User) query.getSingleResult();
+    }
 
     public User addOrUpdate(User entity) {
         return EntityManagerFactoryInstance.getEntityManager().merge(entity);

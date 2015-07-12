@@ -40,22 +40,25 @@ public class LoginServlet extends HttpServlet {
         String userPassword = request.getParameter("password");
 
         try {
-            //User user = UserServices.getInstance().findUserByEmailAndPassword("admin@gmail.com", "iamadmin");
-            User user = UserServices.getInstance().findUserByEmailAndPassword("petr@gmail.com", "iampetr");
+            User user = UserServices.getInstance().findUserByEmailAndPassword("admin@gmail.com", "iamadmin");
+            //User user = UserServices.getInstance().findUserByEmailAndPassword("petr@gmail.com", "iampetr");
+            //User user = UserServices.getInstance().findUserByEmailAndPassword(userEmail, userPassword);
             HttpSession httpSession = request.getSession();
             httpSession.setMaxInactiveInterval(60*60); //60 sec for now
-            //httpSession.setAttribute("email", "admin@gmail.com");
-            httpSession.setAttribute("email", "petr@gmail.com");
+            httpSession.setAttribute("email", "admin@gmail.com");
+            //httpSession.setAttribute("email", "petr@gmail.com");
+            //httpSession.setAttribute("email", userEmail);
             httpSession.setAttribute("user", user);
             ServletContext context = getServletContext();
-            if (false) {
+            if (user.isAdminType()) {
                 Boolean isAdmin = false;
                 List<Plan> allPlanList = PlanServices.getInstance().getAllPlan();
                 Map<User, Boolean> allUsers = UserServices.getInstance().getAllSimpleUserWithLockType();
                 httpSession.setAttribute("isAdmin", isAdmin);
-                httpSession.setAttribute("allPlanList", allPlanList);
+                httpSession.setAttribute("planList", allPlanList);
                 httpSession.setAttribute("allSimpleUsersMap", allUsers);
                 httpSession.setAttribute("errorMessage", "Select Contract");
+                //httpSession.setAttribute("allUserShowContract", user);
                 response.sendRedirect(context.getContextPath() + "/AdminServlet");
             } else {
                 List<Option> availableOptionList = new ArrayList<>();

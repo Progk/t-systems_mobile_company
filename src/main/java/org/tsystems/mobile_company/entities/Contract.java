@@ -38,14 +38,14 @@ public class Contract implements Serializable {
     /**
      * Plan Id
      */
-    @Basic
-    @Column(name = "PLAN_ID", nullable = false)
-    private int planId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "PLAN_ID", referencedColumnName = "ID")
+    private Plan planId;
 
     /**
      * User which has this contract
      */
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "USER_ID", referencedColumnName = "ID")
     private User user;
 
@@ -68,6 +68,13 @@ public class Contract implements Serializable {
     private List<Option> selectedOptions;
 
     public Contract() {
+    }
+
+    public Contract(String number, Plan planId, User user, int lockTypeId) {
+        this.number = number;
+        this.planId = planId;
+        this.user = user;
+        this.lockTypeId = lockTypeId;
     }
 
     public int getId() {
@@ -126,8 +133,12 @@ public class Contract implements Serializable {
     }
 
 
-    public int getPlanId() {
+    public Plan getPlanId() {
         return planId;
+    }
+
+    public void setPlanId(Plan planId) {
+        this.planId = planId;
     }
 
     public void setPlanId(int planId) {

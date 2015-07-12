@@ -8,7 +8,8 @@ import java.util.List;
  */
 @NamedQueries({
         @NamedQuery(name="Plan.getAllPlans", query = "FROM Plan"),
-        @NamedQuery(name="Plan.getPlanByName", query = "FROM Plan WHERE name=:Name")
+        @NamedQuery(name="Plan.getPlanByName", query = "FROM Plan WHERE name=:Name"),
+        @NamedQuery (name = "Plan.deleteAllPlans", query = "DELETE FROM Plan")
 })
 
 
@@ -50,6 +51,12 @@ public class Plan {
     }
 
     public Plan() {
+    }
+
+    public Plan(String name, int price, List<Option> options) {
+        this.name = name;
+        this.price = price;
+        this.options = options;
     }
 
     public int getId() {

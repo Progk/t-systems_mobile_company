@@ -1,6 +1,9 @@
 package org.tsystems.mobile_company.servlets;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import jdk.nashorn.internal.ir.debug.JSONWriter;
 import org.tsystems.mobile_company.EntityManagerFactoryInstance;
 import org.tsystems.mobile_company.dao.OptionDAO;
@@ -63,8 +66,10 @@ public class UserUpdateServlet extends HttpServlet {
                 case "selectOptionClient":
                    selectOptionsClient(request, response);
                     break;
+                case "exitSimpleUser":
+                    exitSimpleUser(request, response);
             }
-            //request.getRequestDispatcher("/user.jsp").forward(request, response);
+            //
         } else if (httpSession == null){
             request.setAttribute("errorMessage", "Session Expired");
         } else {
@@ -72,6 +77,24 @@ public class UserUpdateServlet extends HttpServlet {
         }
     }
 
+    private void exitSimpleUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession httpSession = request.getSession(false);
+        httpSession.invalidate();
+        JsonObject jsonObject = new JsonObject();
+        JsonArray jsonArray = new JsonArray();
+        jsonObject.addProperty("url", "/LoginServlet");
+        jsonArray.add(jsonObject);
+
+        String json= new Gson().toJson(jsonArray);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(json);
+        /*JSONObject jobj = new JSONObject()
+        String urlToRedirect = "test.jsp";
+        jobj.put("url",urlStr);
+        response.getWriter().write(jobj.toString());
+        response.sendRedirect("/LoginServlet");*/
+    }
 
 
     private void clickLockButton(HttpServletRequest request, HttpServletResponse response) {
@@ -130,15 +153,20 @@ public class UserUpdateServlet extends HttpServlet {
         String contractNumber = (String) httpSession.getAttribute("contractNumber");
         List<Plan> availablePlanList;
         try {
-            Contract contract = contractServices.getContractByNumber(contractNumber);  //delete all options in this contract
+            Contract contract = contractServices.getContractByNumber(contractNumber);
             contractServices.deleteAllOptions(contract);
             Plan plan = planServices.findPlanByName(newPlan);
             contract.setPlanId(plan.getId()); //set new plan
             contractServices.updateContract(contract);
+
             availablePlanList = planServices.getAllPlan();
             availablePlanList.remove(plan);
+
             Map<Option, Boolean> optionsForPlan = (HashMap<Option, Boolean>)httpSession.getAttribute("optionsForPlanMap");
             optionsForPlan.clear();
+            for (Option option : plan.getOptions())
+                optionsForPlan.put(option, false);
+
             httpSession.setAttribute("contractPlan", newPlan);
             httpSession.setAttribute("optionsForPlanMap", optionsForPlan);
             httpSession.setAttribute("availablePlanList", availablePlanList);;

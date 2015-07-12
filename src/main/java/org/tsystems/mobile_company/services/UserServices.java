@@ -47,14 +47,16 @@ public class UserServices {
         return user;
     }
 
-    public User addUser(String name, String surname, String dateOfBirth, String passport, String address, String email, String password, String number, boolean isAdmin) {
+    public User addUser(String name, String surname, String dateOfBirth, String passport, String address, String email, String password, boolean isAdmin) {
         Date date = null;
         try {
             date = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(dateOfBirth).getTime());
         } catch (ParseException e) {
             date = new Date(System.currentTimeMillis());
         }
-        User user = null;//= new User(name, surname, date, Integer.valueOf(passport), address, email, password, UserType.ADMIN_TYPE);
+        User user = new User(name, surname, date, Integer.valueOf(passport), address, email, password, User.SIMPLE_USER_TYPE);
+        if (isAdmin)
+            user.setUserType(User.ADMIN_TYPE);
         EntityManagerFactoryInstance.beginTransaction();
         user = userDAO.addOrUpdate(user);
         EntityManagerFactoryInstance.commitTransaction();
@@ -147,4 +149,15 @@ public class UserServices {
         }
         return simpleUserWithLockTypeMap;
     }
+
+
+    public User findUserByEmail(String email) {
+        User user = null;
+        EntityManagerFactoryInstance.beginTransaction();
+        user = userDAO.findUserByEmail(email);
+        EntityManagerFactoryInstance.commitTransaction();
+        return user;
+    }
+
+
 }

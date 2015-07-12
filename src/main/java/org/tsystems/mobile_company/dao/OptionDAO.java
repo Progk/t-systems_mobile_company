@@ -33,31 +33,41 @@ public class OptionDAO implements IEntityDAO<Option> {
         return EntityManagerFactoryInstance.getEntityManager().merge(entity);
     }
 
+
     public Option find(int id) {
         return EntityManagerFactoryInstance.getEntityManager().find(Option.class, id);
     }
+
 
     public void remove(Option entity) {
         EntityManagerFactoryInstance.getEntityManager().remove(entity);
     }
 
+
     public List<Option> getAll() {
         return EntityManagerFactoryInstance.getEntityManager().createNamedQuery("Option.getAllOptions", Option.class).getResultList();
     }
 
+    /**
+     * Deleted option by name
+     * @param name of option
+     */
     public void deleteOptionByName(String name) {
         Query query = EntityManagerFactoryInstance.getEntityManager().createNamedQuery("Option.deleteOptionByName");
         query.setParameter("Name", name);
         query.executeUpdate();
     }
 
-
+   /* *//**
+     * Delete all options
+     * @param id
+     *//*
     public void deleteAllOptionsForContract(int id) {
         Query query = EntityManagerFactoryInstance.getEntityManager().createNamedQuery("Option.deleteAllOptionsForContract");
         query.setParameter("Id", id);
         query.executeUpdate();
     }
-
+*/
     public Option findByName(String name) {
         Query query = EntityManagerFactoryInstance.getEntityManager().createNamedQuery("Option.getOptionByName");
         query.setParameter("Name", name);

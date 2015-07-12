@@ -5,6 +5,7 @@ import org.tsystems.mobile_company.dao.ContractDAO;
 import org.tsystems.mobile_company.dao.OptionDAO;
 import org.tsystems.mobile_company.entities.Contract;
 import org.tsystems.mobile_company.entities.Option;
+import org.tsystems.mobile_company.entities.Plan;
 import org.tsystems.mobile_company.entities.User;
 import org.tsystems.mobile_company.utils.ECareException;
 
@@ -27,6 +28,7 @@ public class ContractServices {
 
     }
 
+
     public static synchronized ContractServices getInstance() {
         if (contractServices == null)
             contractServices = new ContractServices();
@@ -42,7 +44,7 @@ public class ContractServices {
         } catch (NoResultException e) {
             if (EntityManagerFactoryInstance.isActiveTransaction())
                 EntityManagerFactoryInstance.rollbackTransaction();
-            throw new ECareException("No user with this Email and Password");
+            throw new ECareException("No user with this Number(" + number + ") and Password");
         }
         return contract;
     }
@@ -74,7 +76,6 @@ public class ContractServices {
         EntityManagerFactoryInstance.beginTransaction();
         List<Option> allPlans = OptionDAO.getInstance().getAll();
         for (Option option: allPlans) {
-            //EntityManagerFactoryInstance.getEntityManager().merge(option);
             option.getContracts().remove(contract);
             optionDAO.addOrUpdate(option);
         }
@@ -83,7 +84,6 @@ public class ContractServices {
             option.getContracts().remove(contract);
         }
         contract.getSelectedOptions().clear();
-        //EntityManagerFactoryInstance.getEntityManager().merge(contract);
         contractDAO.addOrUpdate(contract);
         EntityManagerFactoryInstance.commitTransaction();
     }
@@ -97,22 +97,12 @@ public class ContractServices {
             optionDAO.addOrUpdate(option);
             contract.getSelectedOptions().add(option);
         }
-        /*for (Option option: allPlans) {
-            //EntityManagerFactoryInstance.getEntityManager().merge(option);
-            optionDAO.addOrUpdate(option);
-        }
-
-        for (Option option: contract.getSelectedOptions()) {
-            option.getContracts().remove(contract);
-        }
-        contract.getSelectedOptions().clear();*/
-        //EntityManagerFactoryInstance.getEntityManager().merge(contract);
         contractDAO.addOrUpdate(contract);
         EntityManagerFactoryInstance.commitTransaction();
 
     }
 
-    public Contract createNewContract(User user, String number, int planId, int lockType) {
+    public Contract createNewContract(User user, String number, Plan planId, int lockType) {
         Contract contract = new Contract(number,planId, user, lockType);
         EntityManagerFactoryInstance.beginTransaction();
         contract = contractDAO.addOrUpdate(contract);

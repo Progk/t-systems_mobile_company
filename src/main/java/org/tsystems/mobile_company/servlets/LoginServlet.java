@@ -1,5 +1,6 @@
 package org.tsystems.mobile_company.servlets;
 
+import org.tsystems.mobile_company.dao.OptionDAO;
 import org.tsystems.mobile_company.dao.PlanDAO;
 import org.tsystems.mobile_company.dao.UserDAO;
 import org.tsystems.mobile_company.entities.*;
@@ -49,6 +50,7 @@ public class LoginServlet extends HttpServlet {
             //httpSession.setAttribute("email", "petr@gmail.com");
             //httpSession.setAttribute("email", userEmail);
             httpSession.setAttribute("user", user);
+            List<Option> allOptions = OptionDAO.getInstance().getAll();
             ServletContext context = getServletContext();
             if (user.isAdminType()) {
                 Boolean isAdmin = false;
@@ -56,6 +58,7 @@ public class LoginServlet extends HttpServlet {
                 Map<User, Boolean> allUsers = UserServices.getInstance().getAllSimpleUserWithLockType();
                 httpSession.setAttribute("isAdmin", isAdmin);
                 httpSession.setAttribute("planList", allPlanList);
+                httpSession.setAttribute("allOptions", allOptions);
                 httpSession.setAttribute("allSimpleUsersMap", allUsers);
                 httpSession.setAttribute("errorMessage", "Select Contract");
                 //httpSession.setAttribute("allUserShowContract", user);

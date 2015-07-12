@@ -14,32 +14,41 @@ public class ContractDAO implements IEntityDAO<Contract> {
 
     private static volatile ContractDAO contractDAOInstance;
 
-   public static ContractDAO getInstance() {
-       if (contractDAOInstance == null) {
-           synchronized (ContractDAO.class) {
-               if (contractDAOInstance == null)
-                   contractDAOInstance = new ContractDAO();
-           }
-       }
+    public static ContractDAO getInstance() {
+        if (contractDAOInstance == null) {
+            synchronized (ContractDAO.class) {
+                if (contractDAOInstance == null)
+                    contractDAOInstance = new ContractDAO();
+            }
+        }
         return contractDAOInstance;
-   }
+    }
+
 
     public Contract addOrUpdate(Contract entity) {
         return EntityManagerFactoryInstance.getEntityManager().merge(entity);
     }
 
+
     public Contract find(int id) {
         return EntityManagerFactoryInstance.getEntityManager().find(Contract.class, id);
     }
+
 
     public void remove(Contract entity) {
         EntityManagerFactoryInstance.getEntityManager().remove(entity);
     }
 
+
     public List<Contract> getAll() {
         return EntityManagerFactoryInstance.getEntityManager().createNamedQuery("Contract.getAllContracts", Contract.class).getResultList();
     }
 
+    /**
+     * Find contract by number
+     * @param number
+     * @return contract if exist or NoResultException
+     */
     public Contract findContractByNumber(String number) {
         Query query = EntityManagerFactoryInstance.getEntityManager().createNamedQuery("Contract.findContractByNumber", Contract.class);
         query.setParameter("Number", number);

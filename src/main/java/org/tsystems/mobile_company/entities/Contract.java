@@ -141,9 +141,7 @@ public class Contract implements Serializable {
         this.planId = planId;
     }
 
-    public void setPlanId(int planId) {
-        this.planId = planId;
-    }
+
 
     @Override
     public boolean equals(Object o) {

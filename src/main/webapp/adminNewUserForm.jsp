@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
 <form class="form-horizontal" role="form" id="newClientForm" action="/AdminUpdateServlet"
       method="post">
   <div class="form-group ">
@@ -78,10 +79,9 @@
 
   <div class="form-group ">
     <label class="control-label col-sm-1" for="selectPlanNewUser">Plan:</label>
-
     <div class="col-sm-4">
       <select class="form-control col-sm-offset-1" id="selectPlanNewUser">
-        <c:forEach var="plan" items="${allPlanList}">
+        <c:forEach var="plan" items="${planList}">
           <option value="${plan.name}">${plan.name}</option>
         </c:forEach>
       </select>
@@ -97,7 +97,7 @@
             <c:when test="${entry.value eq false}">
               <div class="checkbox col-sm-offset-1">
                 <label><input type="checkbox" name="optionNewClientPlan"
-                              onclick="selectOptionForPlanByUser()"
+                              onclick="selectOptionForPlanNewUser()"
                               value="${entry.key.name}">${entry.key.name}
                 </label>
               </div>
@@ -105,7 +105,7 @@
             <c:otherwise>
               <div class="checkbox disabled col-sm-offset-1">
                 <label><input type="checkbox" name="optionNewClientPlan"
-                              onclick="selectOptionForPlanByUser()"
+                              onclick="selectOptionForPlanNewUser()"
                               value="${entry.key.name}"
                               disabled>${entry.key.name}
                 </label>
@@ -122,3 +122,4 @@
     </div>
   </div>
 </form>
+</html>

@@ -117,7 +117,7 @@ public class UserUpdateServlet extends HttpServlet {
         List<Plan> availablePlanList;
         try {
             Contract contract = contractServices.getContractByNumber(contractNumber);
-            Plan plan = planServices.findPlanById(contract.getPlanId());
+            Plan plan = planServices.findPlanById(contract.getPlanId().getId());
             availablePlanList = planServices.getAllPlan();
             availablePlanList.remove(plan);
             Map<Option, Boolean> optionsForPlan = new HashMap<Option, Boolean>();
@@ -156,7 +156,7 @@ public class UserUpdateServlet extends HttpServlet {
             Contract contract = contractServices.getContractByNumber(contractNumber);
             contractServices.deleteAllOptions(contract);
             Plan plan = planServices.findPlanByName(newPlan);
-            contract.setPlanId(plan.getId()); //set new plan
+            contract.setPlanId(plan); //set new plan
             contractServices.updateContract(contract);
 
             availablePlanList = planServices.getAllPlan();

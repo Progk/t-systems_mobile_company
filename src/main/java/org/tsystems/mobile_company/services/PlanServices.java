@@ -59,6 +59,7 @@ public class PlanServices {
         return plan;
     }
 
+
     public Plan findPlanByName(String name) throws ECareException {
         Plan plan = null;
         try {
@@ -90,6 +91,44 @@ public class PlanServices {
     public void createNewPlan(User user, String newPlan) {
         try {
             Plan plan = findPlanByName(newPlan);
+        } catch (ECareException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updatePlan(String oldName, String planNewName, String planNewPrice, String[] options) {
+
+        try {
+            Plan plan2 = findPlanByName(oldName);
+
+            Plan plan = planDAO.find(plan2.getId());
+            List<Option> optionAllList = optionDAO.getAll();
+            List<Option> optionNewList = new LinkedList<>();
+            if (options != null) {
+            for (String o: options) {
+                optionNewList.add(optionDAO.findByName(o));
+            }
+                EntityManagerFactoryInstance.beginTransaction();
+                for (Option o : optionAllList) {
+                    if (plan.getOptions().contains(o) && optionNewList.contains(o)) {
+                        continue;
+                    } else if (!plan.getOptions().contains(o) && optionNewList.contains(o)) {
+                        plan.getOptions().add(o);
+                    } else if (plan.getOptions().contains(o) && !optionNewList.contains(o)) {
+                        plan.getOptions().remove(o);
+                    }
+                    plan.setName(planNewName);
+                    plan.setPrice(Integer.valueOf(planNewPrice));
+                    planDAO.addOrUpdate(plan);
+                }
+                EntityManagerFactoryInstance.commitTransaction();
+            } else {
+                EntityManagerFactoryInstance.beginTransaction();
+                plan.getOptions().clear();
+                planDAO.addOrUpdate(plan);
+                EntityManagerFactoryInstance.commitTransaction();
+            }
+
         } catch (ECareException e) {
             e.printStackTrace();
         }

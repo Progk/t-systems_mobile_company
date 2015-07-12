@@ -49,61 +49,7 @@
 
                         <%--Add options--%>
                         <div class="tab-pane" id="editOptions">
-                            <h4><b>Select Option:</b>
-                                <select class="form-control" id="selectOption">
-                                    <c:forEach var="contract" items="${user.contracts}">
-                                        <option value="${contract.number}">${contract.number}</option>
-                                    </c:forEach>
-                                </select>
-                                <input type="submit" id="deleteOption" value="Delete"/>
-                            </h4>
-                            <hr>
-                            <h4>Add Option</h4>
-
-                            <form class="form-horizontal" role="form" action="/AdminUpdateServlet" method="post">
-                                <div class="form-group ">
-                                    <label class="control-label col-sm-1" for="nameOption">Name Option:</label>
-
-                                    <div class="col-sm-4">
-                                        <input type="text" class="form-control col-sm-offset-1" id="nameOption"
-                                               name="nameOption"
-                                               placeholder="Enter plan name">
-                                    </div>
-                                </div>
-
-                                <div class="form-group ">
-                                    <label class="control-label col-sm-1" for="optionCost">Cost:</label>
-
-                                    <div class="col-sm-4">
-                                        <input type="number" class="form-control col-sm-offset-1" id="optionCost"
-                                               name="planCost" placeholder="Enter cost">
-                                    </div>
-                                </div>
-
-                                <div class="form-group ">
-                                    <label class="control-label col-sm-1" for="optionCostConnection">Cost
-                                        Connect:</label>
-
-                                    <div class="col-sm-4">
-                                        <input type="number" class="form-control col-sm-offset-1"
-                                               id="optionCostConnection"
-                                               name="optionCostConnection" placeholder="Enter cost connection">
-                                    </div>
-                                </div>
-
-                                <div class="form-group ">
-                                    <label class="control-label col-sm-1">Blocked options:</label>
-
-                                    <div class="col-sm-4">
-                                        <c:forEach var="contract" items="${user.contracts}">
-                                            <div class="checkbox">
-                                                <label><input type="checkbox" value="${option.name}">${option.name}
-                                                </label>
-                                            </div>
-                                        </c:forEach>
-                                    </div>
-                                </div>
-                            </form>
+                            <%@ include file="adminEditOptions.jsp" %>
                         </div>
 
                         <%--All Users--%>

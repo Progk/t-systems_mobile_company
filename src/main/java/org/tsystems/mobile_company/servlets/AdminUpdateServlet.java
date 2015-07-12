@@ -1,5 +1,6 @@
 package org.tsystems.mobile_company.servlets;
 
+import com.google.gson.Gson;
 import org.tsystems.mobile_company.EntityManagerFactoryInstance;
 import org.tsystems.mobile_company.dao.OptionDAO;
 import org.tsystems.mobile_company.entities.Contract;
@@ -53,8 +54,14 @@ public class AdminUpdateServlet extends HttpServlet {
                 case "selectPlanNewClient":
                     selectPlanNewClient(request, response);
                     break;
+                case "selectPlanEditUser":
+                    selectPlanEditClient(request, response);
+                    break;
                 case "selectedOptionArrNewClient":
                     selectOptionNewClient(request, response);
+                    break;
+                case "selectedOptionArrEditClient":
+                    selectOptionEditClient(request, response);
                     break;
                 case "editPlan":
                     editPlan(request, response);
@@ -68,8 +75,16 @@ public class AdminUpdateServlet extends HttpServlet {
                 case "searchAdminUser" :
                     searchAdminUser(request, response);
                     break;
+                case "blockUser" :
+                    blockUser(request, response);
+                    break;
+                case "unblockUser" :
+                    unblockUser(request, response);
+                    break;
+                case "editAdminPlan":
+                    editAdminPlan(request, response);
+                    break;
             }
-            //request.getRequestDispatcher("/admin.jsp").forward(request, response);
         } else if (httpSession == null){
             request.setAttribute("errorMessage", "Session Expired");
         } else {
@@ -77,10 +92,56 @@ public class AdminUpdateServlet extends HttpServlet {
         }
     }
 
-    private void searchAdminUser(HttpServletRequest request, HttpServletResponse response) {
+    private void editAdminPlan(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession httpSession = request.getSession(false);
+        String plan = request.getParameter("plan");
+        String planNewName = request.getParameter("planNewName");
+        String planNewPrice = request.getParameter("planNewPrice");
+        String[] options = request.getParameterValues("editPlan" + plan);
+        planServices.updatePlan(plan, planNewName, planNewPrice, options);
+        List<Plan> planList = null;
+        try {
+            planList = planServices.getAllPlan();
+        } catch (ECareException e) {
+            e.printStackTrace();
+        }
+        httpSession.setAttribute("planList", planList);
+    }
+
+    private void unblockUser(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession httpSession = request.getSession(false);
+        String user = request.getParameter("email");
+        User u = userServices.findUserByEmail(user);
+        userServices.unblockUser(user);
+        Map<User, Boolean> allUsers = (Map<User, Boolean>) httpSession.getAttribute("allSimpleUsersMap");
+        allUsers.put(u, false);
+        httpSession.setAttribute("allSimpleUsersMap", allUsers);
+    }
+
+    private void blockUser(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession httpSession = request.getSession(false);
+        String user = request.getParameter("email");
+        userServices.blockUser(user);
+        User u = userServices.findUserByEmail(user);
+        Map<User, Boolean> allUsers = (Map<User, Boolean>) httpSession.getAttribute("allSimpleUsersMap");
+        allUsers.put(u, true);
+        httpSession.setAttribute("allSimpleUsersMap", allUsers);
+    }
+
+    private void selectOptionEditClient(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession httpSession = request.getSession(false);
+        String arr[] = request.getParameterValues("selectedOptionArr[]");
+       /* for (int i = 0; i < arr.length; i++) {
+            arr[i] = arr[i].split("_")[0];
+        }*/
+        Map<Option, Boolean> options = (Map<Option, Boolean>)httpSession.getAttribute("optionsEditUser");
+        UserServices.getInstance().findAvailableOptions(options, arr);
+        httpSession.setAttribute("optionsEditUser", options);
+    }
+
+    private void searchAdminUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession httpSession = request.getSession(false);
         String inputNumber = (String)request.getParameter("inputNumber");
-        String planName = planServices
         List<Plan> planList = null;
         try {
 
@@ -96,14 +157,55 @@ public class AdminUpdateServlet extends HttpServlet {
         } catch (ECareException e) {
             e.printStackTrace();
         }
-        userObject.getContracts().get(0).
+
+        Map<Option, Boolean> options = new HashMap<>();
+        Plan plan = contract.getPlanId();
+        for (Option o : plan.getOptions()) {
+            options.put(o, false);
+        }
+        String[] selectedOptionArr = new String[contract.getSelectedOptions().size()];
+        for (int i = 0; i < contract.getSelectedOptions().size(); i++){
+            selectedOptionArr[i] = contract.getSelectedOptions().get(i).getName();
+        }
+        userServices.findAvailableOptions(options, selectedOptionArr);
+
+        Map<String, String> selectedOptions = new LinkedHashMap<String, String>();
+        for (Option o: contract.getSelectedOptions()){
+            selectedOptions.put(String.valueOf(o.getId()), o.getName());
+        }
+
+        httpSession.setAttribute("optionsEditUser", options);
         httpSession.setAttribute("allPlanList", planList);
         httpSession.setAttribute("adminEditUser", userObject);
-        httpSession.setAttribute("adminEditUserNumber", contract.get);
+        httpSession.setAttribute("adminEditUserNumber", contract.getNumber());
+
+        String json= new Gson().toJson(selectedOptions);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(json);
     }
 
     private void editAdminUser(HttpServletRequest request, HttpServletResponse response) {
-
+        String name = request.getParameter("name");
+        String surname = request.getParameter("surname");
+        String date = request.getParameter("date");
+        String passport = request.getParameter("passport");
+        String address = request.getParameter("address");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        String number= request.getParameter("number");
+        String selectedPlan = request.getParameter("plan");
+        String option=  request.getParameter("options");
+        String options[] = null;
+        if (option != null) {
+            options = option.split(",");
+        }
+        Plan plan = null;
+        try {
+            plan = planServices.findPlanByName(selectedPlan);
+        } catch (ECareException e) {
+            e.printStackTrace();
+        }
     }
 
     private void allUSerShowContract(HttpServletRequest request, HttpServletResponse response) {
@@ -141,6 +243,14 @@ public class AdminUpdateServlet extends HttpServlet {
         httpSession.setAttribute("optionsForPlanMap", options);
     }
 
+    private void selectPlanEditClient(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession httpSession = request.getSession(false);
+        String arr[] = request.getParameterValues("selectedOptionArr[]");
+        Map<Option, Boolean> options = (Map<Option, Boolean>)httpSession.getAttribute("optionsEditUser");
+        UserServices.getInstance().findAvailableOptions(options, arr);
+        httpSession.setAttribute("optionsEditUser", options);
+    }
+
     private void selectPlanNewClient(HttpServletRequest request, HttpServletResponse response) {
         HttpSession httpSession = request.getSession(false);
         String planName = (String)request.getParameter("plan");
@@ -158,16 +268,16 @@ public class AdminUpdateServlet extends HttpServlet {
     }
 
     private void addNewUser(HttpServletRequest request, HttpServletResponse response) {
-        String name = (String)request.getParameter("name");
-        String surname = (String)request.getParameter("surname");
-        String date = (String)request.getParameter("date");
-        String passport = (String)request.getParameter("passport");
-        String address = (String)request.getParameter("address");
-        String email = (String)request.getParameter("email");
-        String password = (String)request.getParameter("password");
-        String number= (String)request.getParameter("number");
-        String selectedPlan = (String)request.getParameter("plan");
-        String option= (String) request.getParameter("options");
+        String name = request.getParameter("name");
+        String surname = request.getParameter("surname");
+        String date = request.getParameter("date");
+        String passport = request.getParameter("passport");
+        String address = request.getParameter("address");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        String number= request.getParameter("number");
+        String selectedPlan = request.getParameter("plan");
+        String option= request.getParameter("options");
         String options[] = null;
         if (option != null) {
             options = option.split(",");
@@ -179,8 +289,7 @@ public class AdminUpdateServlet extends HttpServlet {
             e.printStackTrace();
         }
         User user = userServices.addUser(name, surname, date, passport, address, email, password, false);
-        Contract newContract = contractServices.createNewContract(user, number, plan.getId(), Contract.LOCKED_NONE);
+        Contract newContract = contractServices.createNewContract(user, number, plan, Contract.LOCKED_NONE);
         contractServices.addOptions(newContract, Arrays.asList(options));
-        //planServices.createNewPlan(user, selectedPlan);
     }
 }

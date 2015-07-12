@@ -80,6 +80,23 @@ public class UserServices {
         }
     }
 
+
+    public void findAvailableOptions(Map<Option, Boolean> options, List<Option> selectedOptions) {
+        Set<Option> planOptions = options.keySet();
+        for(Map.Entry<Option, Boolean> entry : options.entrySet())
+            entry.setValue(false);
+        if (selectedOptions != null) {
+            for (Option option : planOptions) {
+                if (selectedOptions.contains(option.getName())) {
+                    for (Option blockOption : option.getLocked()) {
+                        if (options.containsKey(blockOption))
+                            options.put(blockOption, true);
+                    }
+                }
+            }
+        }
+    }
+
     public List<User> getAll() throws ECareException {
         List<User> user = null;
         try {
@@ -138,7 +155,7 @@ public class UserServices {
                 }
                 boolean lock = true;
                 for (Contract c : u.getContracts()) {
-                    if (c.isLockedByAdmin()) {
+                    if (!c.isLockedByAdmin()) {
                         lock = false;
                         break;
                     }
@@ -157,6 +174,26 @@ public class UserServices {
         user = userDAO.findUserByEmail(email);
         EntityManagerFactoryInstance.commitTransaction();
         return user;
+    }
+
+    public void blockUser(String email) {
+        User user = findUserByEmail(email);
+        EntityManagerFactoryInstance.beginTransaction();
+        for (Contract c : user.getContracts()) {
+            c.setLockTypeId(Contract.LOCKED_ADMIN);
+        }
+        userDAO.addOrUpdate(user);
+        EntityManagerFactoryInstance.commitTransaction();
+    }
+
+    public void unblockUser(String email) {
+        User user = findUserByEmail(email);
+        EntityManagerFactoryInstance.beginTransaction();
+        for (Contract c : user.getContracts()) {
+            c.setLockTypeId(Contract.LOCKED_NONE);
+        }
+        userDAO.addOrUpdate(user);
+        EntityManagerFactoryInstance.commitTransaction();
     }
 
 

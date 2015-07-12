@@ -6,7 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<table class="table table-hover">
+<table class="table table-hover" id="editPlanTable">
     <thead>
     <tr>
         <th>Name</th>
@@ -15,7 +15,7 @@
         <th>Edit</th>
     </tr>
     </thead>
-
+    <tbody >
     <c:forEach var="plan" items="${planList}">
         <td>${plan.name}</td>
         <td>${plan.price}</td>
@@ -31,58 +31,65 @@
                 </ul>
             </div>
         </td>
+        <%--dropdown--%>
         <td>
             <button type="button" class="btn btn-info btn-lg" data-toggle="modal"
-                    data-target="#modal${plan.name}">Open Modal
+                    data-target="#modal${plan.name}">Edit Plan
             </button>
         </td>
         <!-- Modal -->
         <div id="modal${plan.name}" class="modal fade" role="dialog">
             <div class="modal-dialog">
-
-                <!-- Modal content-->
                 <div class="modal-content">
+
                     <div class="modal-header">
                         <button type="button" class="close"
                                 data-dismiss="modal">&times;</button>
                         <h4 class="modal-title">Edit</h4>
                     </div>
+
                     <div class="modal-body">
-                        <form role="form" id="updatePlan" action=""
-                              method="post">
-                            <div class="form-group ">
-                                <label class="control-label col-sm-1" for="planNewName">Name:</label>
+                        <form role="form" id="formEdit${plan.name}" onsubmit="updatePlan(this);return false;">
+                            <div role="form" id="updatePlan">
+                                <input type="hidden" name="plan" value="${plan.name}">
+                                <input type="hidden" name="type" value="editAdminPlan">
 
-                                <div class="col-sm-4">
-                                    <input type="text" class="form-control col-sm-offset-1"
-                                           id="planNewName"
-                                           name="planNewName" value="${plan.name}"
-                                           placeholder="Enter name of plan" required>
+                                <div class="form-group">
+                                    <label for="planNewName">Name:</label>
+                                    <input type="text" class="form-control" name="planNewName" value="${plan.name}"
+                                           id="planNewName">
                                 </div>
-                            </div>
-                            <div class="form-group ">
-                                <label class="control-label col-sm-1" for="planNewPrice">Price:</label>
 
-                                <div class="col-sm-4">
-                                    <input type="text" class="form-control col-sm-offset-1"
-                                           id="planNewPrice"
-                                           name="planNewName" value="${plan.price}"
-                                           placeholder="Enter price of plan" required>
+                                <div class="form-group">
+                                    <label for="planNewPrice">Price:</label>
+                                    <input type="number" class="form-control" name="planNewPrice" value="${plan.price}"
+                                           id="planNewPrice">
                                 </div>
+
+                                <label>Options:</label>
+                                <c:forEach var="option" items="${allOptions}">
+                                    <div class="checkbox col-sm-offset-1">
+                                        <label><input type="checkbox" name="editPlan${plan.name}"
+                                                      value="${option.name} " class="btn btn-default">${option.name}
+
+                                        </label>
+                                    </div>
+                                </c:forEach>
+                                <input type="submit"/>
+
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-default" data-dismiss="modal">
+                                        Save
+                                    </button>
+                                </div>
+
                             </div>
                         </form>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">
-                            Close
-                        </button>
-                    </div>
-                </div>
 
+                </div>
             </div>
         </div>
-
-
         </tr>
     </c:forEach>
 

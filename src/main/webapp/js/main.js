@@ -46,28 +46,10 @@ jQuery(document).ready(function ($) {
     });
 
 
-    $("#editClientForm").submit(function () {
-        console.log("editClientFormSubmit");
-        var sendData = $("#newClientForm").serializeArray()
-        var selectedOptionsArr = [];
-        $("input:checkbox[name=optionEditClientPlan]:checked").each(function () {
-            selectedOptionsArr.push($(this).val());
-        });
-        var selectedPlanName = $("#selectPlanEditUser option:selected").text();
-        sendData.push({name: 'options', value: selectedOptionsArr});
-        sendData.push({name: 'plan', value: selectedPlanName});
-        console.log(sendData);
-        $.ajax({
-            type: "POST",
-            url: "/AdminUpdateServlet",
-            data: sendData,
-            success: function (data) {
-                console.log("success");
-            }
-        });
-        return false; // avoid to execute the actual submit of the form.
-    });
+   /* $("#editAdminClientForm").submit(function () {
 
+    });
+*/
     $("#selectPlanNewUser").on('change', function () {
         console.log("selected plan " + $(this).val());
         var sendData = {type: "selectPlanNewClient", plan: $(this).val()}
@@ -123,7 +105,7 @@ function clickSelectPlanButton() {
 function selectOptionForPlanNewUser() {
     console.log("selected");
     var selectedArr = [];
-    $("input:checkbox[name=optionNewPlan]:checked").each(function () {
+    $("input:checkbox[name=optionNewClientPlan]:checked").each(function () {
         selectedArr.push($(this).val());
     });
     var sendData = {type: "selectedOptionArrNewClient", selectedOptionArr: selectedArr}
@@ -145,7 +127,7 @@ function selectOptionForPlanNewUser() {
     });
 }
 
-function selectOptionForPlanByUser() {
+function selectOptionForPlanEditUser() {
     console.log("selected");
     var selectedArr = [];
     $("input:checkbox[name=optionNewClientPlan]:checked").each(function () {
@@ -163,6 +145,31 @@ function selectOptionForPlanByUser() {
                 selectedArr.forEach(function (entry) {
                     console.log(entry);
                     $(":checkbox[value=" + entry + "]").prop('checked', true);
+                });
+            });
+        }
+
+    });
+}
+
+function selectOptionAdminEditUser() {
+    console.log("selected");
+    var selectedArr = [];
+    $("input:checkbox[name=optionEditClientPlan]:checked").each(function () {
+        selectedArr.push($(this).val().substr(0, $(this).val().length-5));
+    });
+    var sendData = {type: "selectedOptionArrEditClient", selectedOptionArr: selectedArr}
+    $.ajax({
+        url: "/AdminUpdateServlet",
+        method: "POST",
+        data: sendData,
+        async: false,
+        success: function (result) {
+            $('.selectEditClientOptionWrapper').load('admin.jsp #selectEditClientOption', function () {
+                //alert( "Load was performed." );
+                selectedArr.forEach(function (entry) {
+                    console.log(entry);
+                    $(":checkbox[value=" + entry + "_edit]").prop('checked', true);
                 });
             });
         }
@@ -203,7 +210,7 @@ function allUserShowContract(data) {
 
         }
     })
-    $('.modalShowContractWrapper').load('admin.jsp #modalShowContract');
+    $('.modalShowContractWrapper').load('admin.jsp modalShowContractWrapper #modalShowContract');
 }
 
 
@@ -215,11 +222,18 @@ function searchClient(v) {
         url: "/AdminUpdateServlet",
         data: sendData,
         dataType: "json",
-        success: function (data, textStatus) {
-
+        success: function (result) {
+            $('.editUserWrapper').load('admin.jsp #editAdminClientForm', function() {
+                //alert( "Load was performed." );
+                $.each(result, function (key, value) {
+                    console.log(value);
+                    $(":checkbox[value=" + value + "edit]").prop('checked', true);
+                });
+            });
         }
     })
-    $('.editUserWrapper').load('admin.jsp #editClientForm');
+
+
     //$('.modalShowContractWrapper').load('admin.jsp #modalShowContract');
     /*var sendData = $("#editClientForm").serializeArray()
     var selectedOptionsArr = [];
@@ -240,3 +254,86 @@ function searchClient(v) {
     })*/
 
 }
+
+function selectNewPlanEditUser(d) {
+    console.log("selected plan " + d.options[d.selectedIndex].value);
+    var sendData = {type: "selectPlanEditClient", plan: d.options[d.selectedIndex].value}
+    $.ajax({
+        url: "/AdminUpdateServlet",
+        method: "POST",
+        data: sendData,
+        async: false,
+        success: function (result) {
+            $('.selectEditClientOptionWrapper').load('admin.jsp #selectEditClientOption');
+        }
+    });
+}
+
+
+function saveEditUser(d){
+    console.log("editClientFormSubmit");
+    var sendData = $("#editAdminClientForm").serializeArray()
+    var selectedOptionsArr = [];
+    $("input:checkbox[name=optionEditClientPlan]:checked").each(function () {
+        selectedOptionsArr.push($(this).val().substr(0, $(this).val().length-5));
+    });
+    var selectedPlanName = $("#selectPlanEditUser option:selected").text();
+    sendData.push({name: 'options', value: selectedOptionsArr});
+    sendData.push({name: 'plan', value: selectedPlanName});
+    console.log(sendData);
+    $.ajax({
+        type: "POST",
+        url: "/AdminUpdateServlet",
+        data: sendData,
+        success: function (data) {
+            console.log("success");
+        }
+    });
+}
+
+
+function blockUser(data) {
+    var sendData = {type: 'blockUser', email: data.id.substr(4, data.id.length-4)}
+    $.ajax({
+        type: "POST",
+        url: "/AdminUpdateServlet",
+        data: sendData,
+        dataType: "json",
+        complete: function (data, textStatus) {
+            $('#at').load('admin.jsp #at');
+        }
+    })
+
+}
+
+
+function unblockUser(data) {
+    var sendData = {type: 'unblockUser', email: data.id.substr(6, data.id.length-6)}
+    $.ajax({
+        type: "POST",
+        url: "/AdminUpdateServlet",
+        data: sendData,
+        dataType: "json",
+        complete: function (data, textStatus) {
+            $('#at').load('admin.jsp #at');
+        }
+    })
+
+}
+
+function updatePlan(data) {
+    var planName = data.id.substr(8, data.id.length-8)
+    var sendData = $("#formEdit" + planName).serializeArray();
+    $.ajax({
+        type: "POST",
+        url: "/AdminUpdateServlet",
+        data: sendData,
+        dataType: "json",
+        complete: function (data, textStatus) {
+            $('#editPlanTable').load('admin.jsp #editPlanTable');
+        }
+    })
+
+}
+
+//////////////Edit options

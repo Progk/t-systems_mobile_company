@@ -29,32 +29,50 @@ public class UserDAO implements IEntityDAO<User> {
 
     }
 
-    public User findUserByEmail(String email) {
-        Query query = EntityManagerFactoryInstance.getEntityManager().createNamedQuery("User.getUserByEmail", User.class);
-        query.setParameter("Email", email);
-        return (User) query.getSingleResult();
-    }
+
 
     public User addOrUpdate(User entity) {
         return EntityManagerFactoryInstance.getEntityManager().merge(entity);
     }
 
+
     public User find(int id) {
         return EntityManagerFactoryInstance.getEntityManager().find(User.class, id);
     }
+
 
     public void remove(User entity) {
         EntityManagerFactoryInstance.getEntityManager().remove(entity);
     }
 
+
     public List<User> getAll() {
         return EntityManagerFactoryInstance.getEntityManager().createNamedQuery("User.getAllUsers", User.class).getResultList();
     }
 
+
+    /**
+     * Find user by Email and Password
+     * @param email
+     * @param password
+     * @return
+     */
     public User findByEmailAndPassword(String email, String password) {
         Query query = EntityManagerFactoryInstance.getEntityManager().createNamedQuery("User.findUserByLoginAndPassword", User.class);
         query.setParameter("Email", email);
         query.setParameter("Password", password);
+        return (User) query.getSingleResult();
+    }
+
+
+    /**
+     * Find user by Email
+     * @param email
+     * @return
+     */
+    public User findUserByEmail(String email) {
+        Query query = EntityManagerFactoryInstance.getEntityManager().createNamedQuery("User.getUserByEmail", User.class);
+        query.setParameter("Email", email);
         return (User) query.getSingleResult();
     }
 }

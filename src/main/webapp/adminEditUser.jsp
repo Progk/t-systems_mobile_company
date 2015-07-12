@@ -20,8 +20,8 @@
 <br>
 
 <div class="editUserWrapper">
-  <form class="form-horizontal" role="form" id="editClientForm" action="/AdminUpdateServlet"
-        method="post">
+  <form class="form-horizontal" role="form" id="editAdminClientForm" action="/AdminUpdateServlet"
+        method="post" onsubmit="saveEditUser(this);return false;">
     <div class="form-group ">
       <label class="control-label col-sm-1" for="name" >Name:</label>
 
@@ -84,7 +84,7 @@
 
       <div class="col-sm-4">
         <input type="text" class="form-control col-sm-offset-1" id="number"
-               name="number" value="${adminEditUserContract.number}"
+               name="number" value="${adminEditUserNumber}"
                placeholder="Enter phone number" required>
       </div>
     </div>
@@ -92,11 +92,17 @@
 
     <div class="form-group ">
       <label class="control-label col-sm-1" for="selectPlanEditUser">Plan:</label>
-
       <div class="col-sm-4">
-        <select class="form-control col-sm-offset-1" id="selectPlanEditUser">
+        <select class="form-control col-sm-offset-1" id="selectPlanEditUser" onchange="selectNewPlanEditUser(this)">
           <c:forEach var="plan" items="${allPlanList}">
-            <option value="${plan.name}">${plan.name}</option>
+            <c:choose>
+              <c:when test="${plan.name eq adminEditUserNumber}">
+                <option value="${plan.name}"  selected >${plan.name}</option>
+              </c:when>
+              <c:otherwise>
+                <option value="${plan.name}">${plan.name}</option>
+              </c:otherwise>
+            </c:choose>
           </c:forEach>
         </select>
       </div>
@@ -104,23 +110,23 @@
     <div class="form-group ">
       <label class="control-label col-sm-1">Options:</label>
 
-      <div class="selectNewClientOptionWrapper">
+      <div class="selectEditClientOptionWrapper">
         <div class="col-sm-4" id="selectEditClientOption">
-          <c:forEach var="entry" items="${optionsForPlanMap}">
+          <c:forEach var="entry" items="${optionsEditUser}">
             <c:choose>
               <c:when test="${entry.value eq false}">
                 <div class="checkbox col-sm-offset-1">
                   <label><input type="checkbox" name="optionEditClientPlan"
-                                onclick="selectOptionForPlanByUser()"
-                                value="${entry.key.name}">${entry.key.name}
+                                onclick="selectOptionAdminEditUser()"
+                                value="${entry.key.name}_edit">${entry.key.name}
                   </label>
                 </div>
               </c:when>
               <c:otherwise>
                 <div class="checkbox disabled col-sm-offset-1">
                   <label><input type="checkbox" name="optionEditClientPlan"
-                                onclick="selectOptionForPlanByUser()"
-                                value="${entry.key.name}"
+                                onclick="selectOptionAdminEditUser()"
+                                value="${entry.key.name}_edit"
                                 disabled>${entry.key.name}
                   </label>
                 </div>

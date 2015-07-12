@@ -66,6 +66,14 @@ public class Option {
     private List<Option> locked;
 
     /**
+     * Depend options
+     */
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name="OPTIONS_DEPEND",
+            joinColumns={@JoinColumn(name="OPTION_ID")},
+            inverseJoinColumns={@JoinColumn(name="OPTION_ID_DEPEND")})
+    private List<Option> depended;
+    /**
      * Options for locked option
      */
     @ManyToMany(mappedBy="locked", cascade = {CascadeType.ALL})
